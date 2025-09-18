@@ -1,3 +1,3 @@
 # Table of contents
 
-* [Advanced Bash Scripting](README.md)
+* [GRC](README.md)

@@ -1,532 +1,309 @@
-# Advanced Bash Scripting
+# GRC
 
-<figure><img src=".gitbook/assets/4134534_c110_7.jpg" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/detail_what-is-grc.png" alt=""><figcaption></figcaption></figure>
 
 ***
 
-## <mark style="color:purple;">Readings Arguments</mark>
+## <mark style="color:purple;">Security Principle: Access Control</mark>
 
-arguments are the values given to the command line at the time a command or a Bash script is run. Bash enumerates these arguments like \`$1\`, \`$2\`, \`$3\`, etc. and makes them accessible.&#x20;
+Not everyone should have access to every document and information, right? Employees in the accounting department should not have access to human resources documents, and vice versa; individuals in human resources should not have access to accounting documents.The same principle applies to a computer network
 
-* &#x20;\`$0\`: Represents the name of the command or script.
-* \`$1\`, \`$2\`, \`$3\`,...: these are used to access the first second, third, etc. arguments on the command line.
-* \`$@\`: Represents all command line arguments as an array.
-* \`$#\`: Represents the total number of arguments given on the command line.
-* \`$\*\`: Represents all command line arguments as an array, but the arguments are concatenated into a single string.
-* \`$?\`: Represents the exit status of the last command executed
+Access control :
 
-For example, we can print a message using command line arguments in the following script:
+* governs the permissions for different individuals to access various information and resources within the network, specifying when and how they can do so.
+* access control design can cause to unintended access to sensitive information by unauthorized individuals. This poses critical risks to the security of data, applications, and other resources within your network
+* not only determines who can access which information, but also determines when and how users can access this information. This will help implement processes and policies better, comply with the regulations, and improve the overall security of your network
 
-```
-#!/bin/bash
+common approaches to access control are :
 
-echo "Arguments from command line:"
-echo "Argument 1: $1"
-echo "Argument 2: $2"
-echo "Argument 3: $3"
-echo "All Arguments: $@"
-echo "Total Arguments Count: $#"
-```
+* &#x20;RBAC (Role-Based Access Control)&#x20;
+* ABAC (Attribute-Based Access Control)
 
-To run this script, you can provide arguments on the command line like this:
+### Role-Based Access Control (RBAC)
 
-```
-./arguments.sh Hello World!
-```
+* used to determine users' authorization levels and the resources they can access. This ensures that the principle of least privilege is followed and that data privacy is protected.
+* manages user or group access permissions to a system by assigning roles and associating them with specific permissions
 
-<figure><img src=".gitbook/assets/bash22.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/sni9 (1).png" alt=""><figcaption></figcaption></figure>
 
-### <mark style="color:$success;">shift</mark>
+### Implementation of RBAC
 
-used to shift command line arguments and change access. Each shift command causes command line arguments to shift to the next position
+1- **Defining the Role**\
+**2- Assigning Users to Roles**\
+**3- Authorization and Definition of Permissions**\
+**4- Implementation of Access Control**\
 
-```
-#!/bin/bash
 
-echo "Arguments from command line:"
-echo "Argument 1: $1"
+**Advantages of RBAC:**
 
-shift
+* Enhances the organization of business and authorization processes.
+* Management of user roles and permissions becomes easier.
+* Provides security by preventing unauthorized access.
+* Improves collaboration and operational efficiency.
+* Provides traceability and compliance in internal and external audits.
 
-echo "After shifting"
-echo "Argument 1: $1"
-```
+\
+ABAC :
 
-<figure><img src=".gitbook/assets/bash23.png" alt=""><figcaption></figcaption></figure>
-
-### <mark style="color:$success;">Getopts</mark>
-
-getopts is a structure used in bash script to parse command line arguments and catch certain flags or options. It is often used with a “while” loop. With getopts you can add certain flags or options to your script and have the user use those flags or options in a certain way.
-
-```
-#!/bin/bash
-
-while getopts ":a:bc" opt; do
-  case ${opt} in
-    a)
-      echo "Option a is passed with value: $OPTARG"
-      ;;
-    b)
-      echo "Option b is passed"
-      ;;
-    c)
-      echo "Option c is passed"
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG"
-      ;;
-  esac
-done          
-```
-
-In this example, we are checking three separate options using the -a, -b, and -c flags.
-
-<figure><img src=".gitbook/assets/bash24.png" alt=""><figcaption></figcaption></figure>
-
-In the example below, the user is allowed to use either "-o" or "--option" options.\
-This is a usage that provides comfort to the user when too many arguments are used.
-
-```
-#!/bin/bash
-
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        -o|--option)
-            option_value="$2"
-            echo "Option value: $option_value"
-            shift 2
-            ;;
-        *)
-            echo "Invalid Argument: $1"
-            exit 1
-            ;;
-    esac
-    shift
-done
-```
-
-#### <mark style="color:$success;">Shell Expansion</mark>&#x20;
-
-property used to expand or evaluate special characters or expressions in a string. Expansion is performed immediately after a string on the command line, allowing the string to be replaced with a new value or otherwise manipulated
-
-Bash shell expansion supports the following special characters or expressions :
-
-* **Tilde expansion**\
-  (\~): The tilde character represents a user's home directory (\`$HOME\`). For example, we can combine \`\~\` with \`\~/Documents\` to represent the user's "Documents" directory.
-* **Parameter expansion**\
-  ($): The \`$\` character represents the value of a variable. For example, we can get the user's home directory using \`$HOME\`.
-* **Arithmetic expansion**\
-  (()):  The expression \`(( ))\` is used to evaluate arithmetic expressions. For example, the expression \`(( x = 5 + 3 ))\` assigns the value 5 + 3 to the variable \`x\`.
-* **Conditional Expression Expansion**\
-  The \`(( ))\` expression is used to evaluate conditional expressions. For example, with the expression \`(( x > y ))\` we can check whether the value \`x\` is greater than \`y\`.
-* **Brace Expansion**\
-  (${ }): The \`${ }\` expression is used to retrieve or manipulate the values of variables or string expressions. For example, with \`${var}\` we can get the value of the variable \`var\`.
-* **Command Substitution**\
-  (\` \` or $( )): Command substitution is used to output a command and can be performed in two different ways by using backquotes (\` \`) or \`$()\`. For example, with the expression \`result=$(date)\` we can assign the output of the \`date\` command to the \`result\` variable.
-* **Arrays Expansion**\
-  (${\[ ]}): The \`${\[ ]}\` expression is used to access the elements of arrays or perform operations related to the array. For example, we can access the first element of an array with the expression \`${array\[0]}\`.
-
-```
-#!/bin/bash
-
-# Tilde Expansion (~)
-echo "Home Directory: $HOME"
-echo "Documents Directory: ~/Documents"
-
-# Parameter Expansion ($)
-greeting="Hello, World!"
-echo "Greeting: $greeting"
-
-# Arithmetic Expansion (())
-(( x = 5 + 3 ))
-echo "x = $x"
-
-# Conditional Expression Expansion (())
-x=10
-y=5
-if (( x > y )); then
-  echo "x is greater than y"
-else
-  echo "x is not greater than y"
-fi
-
-# Brace Expansion (${ })
-name="John"
-echo "Hello, ${name}!"
-
-# Command Substitution (` ` or $( ))
-current_date=$(date)
-echo "Current Date: $current_date"
-
-# Array Expansion (${[ ]})
-numbers=(10 20 30 40 50)
-echo "First Number: ${numbers[0]}"
-```
-
-<figure><img src=".gitbook/assets/bash25.png" alt=""><figcaption></figcaption></figure>
-
-When bash receives a command that a user types on the keyboard or comes from a bash script, it splits it into words. In doing so, Bash can perform seven different operations on words, which can change how they are interpreted and thus the output. There are 7 different expansions that we can use in Bash. Now let's examine them one by one:
-
-*   ### <sub><mark style="color:$success;">Brace Expansion<mark style="color:$success;"></sub> <sub></sub><sub>:</sub>&#x20;
-
-    ### <sub>race Expansion is often used to create variations of a particular pattern in Bash : This command creates five different files named file\_1.txt, file\_2.txt, file\_3.txt, file\_4.txt and file\_5.txt.</sub>
-
-```
-touch file_{1..5}.txt
-```
-
-Also, this can be useful if a command is run repeatedly with different parameters.\
-This script checks whether the files named "file1.txt", "file2.txt" and "file3.txt" are readable
-
-```
-#!/bin/bash
-for i in {1..3}; do
-    if [[ -r "file${i}.txt" ]]; then
-        echo "You have read permission for file${i}.txt"
-    else
-        echo "You do not have read permission for file${i}.txt"
-    fi
-done
-```
-
-<figure><img src=".gitbook/assets/bash35.png" alt=""><figcaption></figcaption></figure>
-
-* ### <mark style="color:$success;">Tilde Expansion</mark>
-
--a tilde expansion is actually replacing a path that points to a user's home directory.\
-\- instead of taking risks by expressing the directory of a user whose name we know as /home/\<username>/ we can express it as **\~\<username>** .
-
-<figure><img src=".gitbook/assets/shell-table.png" alt=""><figcaption></figcaption></figure>
-
-```
-#!/bin/bash
-echo ~
-echo ~root
-echo ~/Documents
-echo ~root/Documents
-echo ~+
-echo ~-               
-```
-
-<figure><img src=".gitbook/assets/bash37.png" alt=""><figcaption></figcaption></figure>
-
-
-
-* ### <mark style="color:$success;">Parameter and Variable Expansion</mark>
-
-used to get the value of a variable. This variable can be a variable that we define in the script, or it can be a parameter that we give from the command line when calling our script
-
-**Default Values:** If a variable is not defined, a default value can be assigned during expansion. We can use it as **${var:-default\_value}.** \
-In this example, if the variable **name** is not defined, it will output "Unknown".
-
-```
-#!/bin/bash
-echo ${name:-"Unknown"}
-```
-
-**Error Checking:** If the **${var:?error\_message}** form is used and if the variable is not defined, it will generate an error message and stop the script.
-
-```
-#!/bin/bash
-echo ${name:?"Name is not set."}
-```
-
-**Substring Replacement: ${var/find/replace}** usage replaces the “ **find** ” expression in the “ **var** ” variable with “ **replace** ”.  " **Hello, Earth!** " output after you run the script.
-
-```
-#!/bin/bash
-greeting="Hello, World!"
-echo ${greeting/World/Earth} 
-```
-
-we can treat all parameters as an array. And, we can do it by using $@ or $\* expression.
-
-```
-#!/bin/bash
-
-for prms in "$@"
-do
-  echo "Parameter: $prms"
-done
-```
-
-<figure><img src=".gitbook/assets/bash38.png" alt=""><figcaption></figcaption></figure>
-
-Using the IFS variable, you can split a string in bash by a specific character or string of characters. For example, you can set the IFS variable to a comma to split a comma-separated array:
-
-```
-#!/bin/bash
-
-my_string="LetsDefend is ,one of the ,best resources on cybersecurity"
-
-IFS=','
-for word in $my_string
-do
-  echo $word
-done
-             
-```
-
-<figure><img src=".gitbook/assets/bash40.png" alt=""><figcaption></figcaption></figure>
-
-### <mark style="color:$success;">Command Substitution</mark>
-
-Every time you run this script, the “ **now** “ variable will be created with the current date and will produce a different output each time.
-
-```
-#!/bin/bash
-
-now=$(date)
-echo "The current date and time is: $now"
-```
-
-we do not define any variables and we output the ls command and use it at runtime.
-
-```
-#!/bin/bash
-
-echo "Directory contents: $(ls)"
-```
-
-we can use them together : we list the disk space used by the files in our current directory.
-
-```
-#!/bin/bash
-
-echo "File sizes: $(du -h $(pwd))"
-```
-
-### <mark style="color:$success;">Arithmetic Expansion</mark>
-
-```
-#!/bin/bash
-
-echo $((5 + 2)) # Output: 7
-echo $((5*2)) # Output: 10
-echo $((10 / 2)) # Output: 5
-echo $((10 - 5)) # Output: 5
-
-
-num1=15
-num2=5
-echo $((num1 / num2)) # Output: 3
-```
-
-### <mark style="color:$success;">Word Splitting</mark>
-
-process of converting a string into multiple values by splitting it according to a certain separator. It is often used when looping over an array or when you want to split the output of a command into multiple values.
-
-```
-#!/bin/bash
-
-my_string="LetsDefend is one of the best resources on cybersecurity"
-
-for word in $my_string
-do
-  echo $word
-done
-```
-
-<figure><img src=".gitbook/assets/bash39.png" alt=""><figcaption></figcaption></figure>
-
-how bash handles quotes. Word splitting does not occur when a string is in double quotes.\
-example
-
-```
-#!/bin/bash
-
-my_string="LetsDefend is one of the best resources on cybersecurity"
-
-for word in “$my_string”
-do
-  echo $word
-done
-```
-
-<figure><img src=".gitbook/assets/bash-split.png" alt=""><figcaption></figcaption></figure>
-
-#### <mark style="color:$success;">Pathname Expansion</mark>
-
-Bash uses various special characters and structures for pathname expansion:
-
-<figure><img src=".gitbook/assets/shell-exp-t.png" alt=""><figcaption></figcaption></figure>
-
-```
-#!/bin/bash
-
-# It lists all txt files.
-ls *.txt
-
-# Lists all files with a single character name.
-ls ?
-
-# List all files with a, b or c in their name.
-ls *[abc]*
-
-# Lists all files whose names match a given number range (1-3).
-ls *[1-3]*
-```
-
-,shows the **.log** files under the **/var/log/** directory and how many lines of data are in them.
-
-```
-#!/bin/bash
-
-
-dir_path="/var/log"
-
-for file in $dir_path/*.log
-do
-  line_count=$(wc -l <"$file")
-  echo "$file file has $line_count line log"
-done
-```
+* &#x20;access control principle that permits us to define it through attribute-based access control
+* flexible and effective access control mechanism that can respond to current security needs
 
 ***
 
-#### <mark style="color:$success;">RegEx and Bash</mark>
+## &#x20;<mark style="color:purple;">**Separation and the Principles of the Least Privilege**</mark>
 
-* RegEx is a set of languages and techniques used to identify specific patterns in text and perform operations such as searching, matching and replacing according to these patterns.
+\
+**(Separation of Duties)**
 
-For example, you can check if a particular word occurs in the text.
+* the division of the permissions required to perform a task between people or roles.
+* aims to prevent a single person or role from being able to perform all the tasks and to prevent potential malicious activities
+* For instance, when an individual initiates a task, another person might be required to authorize or finalize it.
 
-```
-#!/bin/bash
+<figure><img src=".gitbook/assets/unnamed.gif" alt=""><figcaption></figcaption></figure>
 
-# Check if a string matches a pattern
-string="Hello, World!"
-pattern="^Hello"
 
-if [[ $string =~ $pattern ]]; then
-    echo "Pattern matched!"
-else
-    echo "Pattern not matched!"
-fi
-```
 
-For example, removing parameters from a URL or removing spaces in text
+**The Least Privilege :**&#x20;
 
-```
-#!/bin/bash
+* simply providing users or roles only the minimum privileges necessary for their duties
+* prevents data breaches and improves network security by limiting the authorization level.
 
-# Replace occurrences of a word in a string
-string="I love cats. Cats are amazing."
-pattern="cats"
-replacement="dogs"
+<figure><img src=".gitbook/assets/images.jpg" alt=""><figcaption></figcaption></figure>
 
-new_string="${string//$pattern/$replacement}"
-echo "New string: $new_string"      
-```
+***
 
-<figure><img src=".gitbook/assets/bash30.png" alt=""><figcaption></figcaption></figure>
+## <mark style="color:purple;">Authentication</mark>
 
-For example, checking the validity of an email address or verifying the accuracy of a phone number
+Strong Authentication Methods :&#x20;
 
-```
-#!/bin/bash
+* Multi-Factor Authentication (MFA)
+* Password Policies and Long, Complex Passwords&#x20;
+* Passwords should be changed periodically, stored securely, and should not be reused.
+* Application of technological authentication methods such as biometric verification or physical devices.
 
-# Function to validate email address using RegEx
-validateEmail() {
-    email=$1
-    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+<figure><img src=".gitbook/assets/image6.png" alt=""><figcaption></figcaption></figure>
 
-    if [[ $email =~ $pattern ]]; then
-        echo "Email address is valid."
-    else
-        echo "Email address is invalid."
-    fi
-}
+***
 
-# Prompt user to enter an email address
-echo "Enter an email address:"
-read user_email
+## <mark style="color:purple;">Session Management</mark>
 
-# Call the validateEmail function with the entered email address
-validateEmail "$user_email"
-             
-```
+Users' access should be granted for the required time period and the session should be terminated automatically. This measure safeguards against unauthorized access and mitigates the risk of session hijacking
 
-<figure><img src=".gitbook/assets/bash31.png" alt=""><figcaption></figcaption></figure>
+implement control mechanisms :&#x20;
 
-For example, let's have an "access.log" file of a web server like the one below:
+**1. Starting a Session:** The session should start according to the conditions specified in the RBAC and/or ABAC part .
 
-```
-127.0.0.1 - - [28/May/2023:12:34:56 +0000] "GET /sayfa1 HTTP/1.1" 200 1234 "https://www.example.com" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
-127.0.0.1 - - [28/May/2023:12:34:57 +0000] "GET /sayfa2 HTTP/1.1" 200 5678 "https://www.example.com" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
-...
-```
+**2. Maintaining a Session:** The session should persist under the same conditions in which it was initiated.
 
-we want to see the "User Agent" strings in this file in bulk:
+**3. Session Monitoring:** During the session period, there should be no activity other than the scheduled permissions and privileges.
 
-```
-#!/bin/bash
+**4. Session Termination:** The session must be terminated properly.\
 
-log_file="access.log"
 
-# Check if log file exists
-if [ ! -f "$log_file" ]; then
-    echo "Log file $log_file not found."
-    exit 1
-fi
+Authorization and session managements are key elements of access control and are critical for a secure network infrastructure.
 
-# Function to extract user agents from log file
-extractUserAgents() {
-    while IFS= read -r line; do
-        user_agent=$(echo "$line" | awk -F'"' '{print $6}')
-        echo "User Agent: $user_agent"
-    done < "$log_file"
-}
+***
 
-# Call the extractUserAgents function
-extractUserAgents
-```
+## <mark style="color:purple;">Static and Dynamic Data</mark>
 
-<figure><img src=".gitbook/assets/bash32.png" alt=""><figcaption></figcaption></figure>
+* **Static (stationary) data:** Static data, as its name suggests, remains stationary; it is stored somewhere, awaiting utilization. Examples include data on disks, etc. All forms of data residing in these kinds of environments fall within this category.
+* **Dynamic data:** Dynamic data, as the name implies, is data that moves from one place to another. \[ This can also be a file downloaded to your system from an internet source ] \
 
-we want to find e-mail addresses in a text file, check for validity and generate a report
 
-```
-#!/bin/bash
+When the data is stored on the server (**static data**), it is protected using measures like network segmentation, RBAC, strong password policies, and multi-factor authentication. However, once the data is transferred between two locations (**dynamic data**), it travels through systems we cannot control. The only reliable way to secure it in transit is through **encryption**, ensuring that only the sender and the intended recipient can interpret it.
 
-input_file="input_file.txt"
-output_file="report.txt"
+* **Static Data** → protected with access controls and permissions.
+* **Dynamic Data** → protected with encryption during transmission.
 
-# Check if input file exists
-if [ ! -f "$input_file" ]; then
-    echo "Input file $input_file not found."
-    exit 1
-fi
+<figure><img src=".gitbook/assets/sni2.png" alt=""><figcaption></figcaption></figure>
 
-# Function to validate email address
-validateEmail() {
-    email=$1
-    pattern="^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$"
+### Protection of Dynamic Data
 
-    if [[ $email =~ $pattern ]]; then
-        echo "Valid Email: $email"
-    else
-        echo "Invalid Email: $email"
-    fi
-}
+* **Data Encryption**
+* **Secure Data Communication \[** SSL/TLS protocols can be used , verification ]&#x20;
 
-# Process input file and generate report
-processFile() {
-    while IFS= read -r line; do
-        # Find email addresses using regex
-        email_regex="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-        emails=$(echo "$line" | grep -E -o "$email_regex")
+<figure><img src=".gitbook/assets/image8.png" alt=""><figcaption></figcaption></figure>
 
-        # Validate and write emails to output file
-        for email in $emails; do
-            validateEmail "$email" >> "$output_file"
-        done
-    done < "$input_file"
+* make sure that the data is transferred and verified securely.
+* not storing data unnecessarily.
+* Data should be stored as long as necessary and should be purged regularly to reduce the risk of unnecessary retention
+* the data must be stored securely for the duration of the retention period and access to the data must be restricted
+* Data flow and sharing should be monitored, and unauthorized access attempts or data breaches should be detected.
 
-    echo "Report generated: $output_file"
-}
+\
+Protection of Static Data&#x20;
 
-# Call the processFile function
-processFile
-```
+* **Data Encryption**
+* **Access Controls \[** Defining user roles, permissions, and data restrictions ensures that only legitimate users have access to data ]&#x20;
+* **Data Backup and Recovery**
+* Storage areas for static data should be secured with a combination of physical and electronic security measures
+* Physical security includes measurements like secure data centers or server rooms, access controls, security cameras, and alarm systems. On the other hand, electronic measurements include strong encryption, firewalls, security tools, and intrusion detection systems.
+* **Security Monitoring and Incident Response**
+* **Data Deletion and Destruction**
 
-<figure><img src=".gitbook/assets/bash33.png" alt=""><figcaption></figcaption></figure>
+***
+
+## &#x20;<mark style="color:purple;">Authorization Methods</mark>
+
+Authorization, which is performed after the authentication process, allows the users to determine the level of access to certain resources
+
+Commonly used authorization approaches : \
+1- **Role-Based Authorization**\
+**2- Policy-Based Authorization**\
+**3- Permission-Based Authorization**
+
+\
+**Role-Based Authorization :**
+
+* Users gain access to certain resources in the system depending on their role.
+* For example, users with an "Administrator" role can access all functions of the system, while users with a "User" role may be subject to certain restrictions
+
+<figure><img src=".gitbook/assets/ab0d45a55f0c41a243093fb57d460fc366fed9ab-6336x3952.png" alt=""><figcaption></figcaption></figure>
+
+\
+**Policy-Based Authorization :**&#x20;
+
+* includes policy rules that determine users' access rights.&#x20;
+* For example, a policy rule may specify whether a particular user can access or not access a particular resource in a particular time zone.
+
+<figure><img src=".gitbook/assets/1751553018993.jpg" alt=""><figcaption></figcaption></figure>
+
+
+
+**Permission-Based Authorization :**&#x20;
+
+* Users are given permissions to access certain resources or perform certain actions.
+* &#x20;For example, a user is given specific permissions to read, write, or delete a file.
+* For example, user is included in an organization's guest network. After this process, the user is only authorized to read the files shared on the network\
+
+
+technologies and standards exist to support and implement the Authentication and Authorization processes :&#x20;
+
+* **LDAP (Lightweight Directory Access Protocol):** is a communication protocol used to retrieve user credentials from databases. It supports directory-based services used in the authentication and authorization processes of users.
+* **Single Sign-On (SSO):** allows users to access multiple applications with a single authentication. Users authenticate once and then automatically gain access to other applications.
+
+<figure><img src=".gitbook/assets/auth3.png" alt=""><figcaption></figcaption></figure>
+
+* Kerberos is a protocol used to provide secure authentication on a network. It is especially used in Windows-based systems and Active Directory environments
+* **SAML (Security Assertion Markup Language):** is an XML-based standard used for authentication and authorization. Provides federation-based authentication where users are authenticated with a security statement provided by the identity provider to access a service
+
+<figure><img src=".gitbook/assets/676ffeb1fa353f97be8f0246_61cc7d5ff16cb02316b7d847_SAML_20work.png" alt=""><figcaption></figcaption></figure>
+
+* **RADIUS (Remote Authentication Dial-In User Service):** is a network protocol used for user authentication and authorization in remote access services. It is mainly used in network access points.
+
+<figure><img src=".gitbook/assets/RADIUS-Authentication-Process.png" alt=""><figcaption></figcaption></figure>
+
+* OAuth : is an authorization protocol that allows users to be authorized to access a service. Used to control access to credentials of third-party applications.
+
+<figure><img src=".gitbook/assets/everything-you-need-to-know-about-oauth-4.png" alt=""><figcaption></figcaption></figure>
+
+* OpenID Connect is a standard that combines authentication and authorization processes based on the OAuth 2.0 protocol. It provides secure authentication of users through identity providers.
+* **JWT (JSON Web Token):** JWT is an authentication mechanism used in web applications. It encrypts and securely transports user information in JSON format. These tokens enable secure sharing of authentication information
+
+{% embed url="https://medium.com/@anas.abdo990088/jwt-from-a-blue-team-perspective-5f9f3d05c9b3" %}
+
+{% embed url="https://medium.com/@anas.abdo990088/secrets-lab-blue-team-labs-online-7e7af65ea593" %}
+
+***
+
+## &#x20;Password Management
+
+A strong and effective password management strategy is an essential step in ensuring the security of information, accounts, and systems.&#x20;
+
+Password Creation Policies :&#x20;
+
+* Regularly changing password
+* storing passwords securely
+* creating strong passwords
+* two-factor authentication
+* use unique passwords for each account
+* **Automatic Password Generation Tools**
+
+should include the basic principles of creating strong and secure passwords. Password generation principles basically consist of important items such as length, complexity, uniqueness, unpredictability, regular password updates, using automatic password generation tools, etc.
+
+**Length:** It is important that passwords are too long to guess easily. It is generally recommended to be at least 12 characters long. Longer passwords provide more robust protection.
+
+**Frequency of Updates :** How often passwords should be updated often depends on policies set by the organization. The recommended period is usually 90 days. However, in some cases, this period may be shorter or longer.
+
+<figure><img src=".gitbook/assets/pass1.jpeg" alt=""><figcaption></figcaption></figure>
+
+The following section is used to set a password policy on Windows.
+
+<figure><img src=".gitbook/assets/image4-1.png" alt=""><figcaption></figcaption></figure>
+
+The following file is used to set a password policy on Linux:
+
+<figure><img src=".gitbook/assets/image4-2.png" alt=""><figcaption></figcaption></figure>
+
+login.defs : the name of the file used to set the password policy on Linux
+
+the password policy you’re looking for (like **minimum numbers required in a password**) is usually defined in one of these files, not in the `/etc/pam.d/` folder itself.
+
+* `/etc/pam.d/passwd` → runs when you change a password.
+* `/etc/pam.d/sshd` → rules for SSH logins.
+* `/etc/pam.d/system-auth` (RedHat/CentOS) or `/etc/pam.d/common-password` (Ubuntu/Debian) → global rules for password policies.
+
+`/etc/pam.d/`   VS     `/etc/pam.d/`
+
+#### `/etc/pam.d/`
+
+* This is a **directory** that contains configuration files for **PAM (Pluggable Authentication Modules)**.
+* PAM enforces complex password policies (like minimum number of digits, uppercase letters, minimum length, retries, etc.).
+
+#### `/etc/login.defs`
+
+* This is a **single configuration file** that controls more general user account settings.
+* It does **not** control password complexity (like digits or uppercase letters)
+*   Examples of directives inside:
+
+    * **PASS\_MAX\_DAYS** → maximum days a password is valid.
+    * **PASS\_MIN\_DAYS** → minimum days before a password can be changed again.
+    * **PASS\_WARN\_AGE** → how many days before expiration a warning is shown.
+    * **UID\_MIN / UID\_MAX** → range of user IDs for regular users.
+
+    &#x20;
+
+**Summary:**
+
+* `/etc/pam.d/` → handles **password strength and quality rules**.
+* `/etc/login.defs` → handles **password aging and user account defaults**.
+
+\
+Password Sharing and Communication :&#x20;
+
+* When passwords need to be shared, secure methods should be used. Sending passwords via email, instant messaging, or plain text are totally risky. Instead, it is important to use secure encryption protocols. For example, tools such as PGP (Pretty Good Privacy) can be used to send passwords encrypted. It is also a preferred method to securely share passwords face-to-face or with people you trust. This reduces the risk of the password being compromised by unauthorized persons.
+* It is important to use secure communication tools such as encrypted messaging apps or virtual private networks (VPN).
+
+
+
+### Credential Harvesting Methods :&#x20;
+
+* **Phishing**
+* **Keylogger**
+* **Brute Force Attacks**
+* **Dictionary Attack**
+* **Social Engineering**
+
+### Precautions Against Password Threats 
+
+* It is important to use strong and complex passwords.&#x20;
+* It is important to change passwords regularly.&#x20;
+* Using multi-factor authentication increases security.
+* Using secure internet connections reduces the risk of passwords being stolen.
+* &#x20;Risky connections such as public networks or unsafe Wi-Fi hotspots should be avoided.
+* Using reliable and up-to-date anti-virus software prevents password theft attacks&#x20;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
