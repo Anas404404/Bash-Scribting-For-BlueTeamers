@@ -1,7 +1,9 @@
 # Table of contents
 
-## Group 1
+* [Whoami ?](README.md)
 
-* [Bash Scripting for Blue Team](README.md)
-* [Intro To to Bash Scripting](group-1/intro-to-to-bash-scripting.md)
-* [Advanced Bash Scripting](group-1/advanced-bash-scripting.md)
+## Bash Scripts For Defenders
+
+* [Bash Scripting for Blue Team](bash-scripts-for-defenders/bash-scripting-for-blue-team.md)
+* [Intro To to Bash Scripting](bash-scripts-for-defenders/intro-to-to-bash-scripting.md)
+* [Advanced Bash Scripting](bash-scripts-for-defenders/advanced-bash-scripting.md)
