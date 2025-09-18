@@ -11,3 +11,7 @@
 ## GRC404
 
 * [GRC](grc404/grc.md)
+
+## MITRE ATT\&CK
+
+* [Lateral Movement With RDP](mitre-att-and-ck/lateral-movement-with-rdp.md)
