@@ -1,910 +1,532 @@
-# Bash Scripting for Blue Team
+# Advanced Bash Scripting
 
-<figure><img src=".gitbook/assets/1_m6FDZYIThNMQEPo3YHhEvQ.png" alt=""><figcaption></figcaption></figure>
-
-***
-
-### <mark style="color:purple;">Escaping Errors</mark>
-
-When adding values of variables directly to commands, there is always a risk that these values are manipulated and may cause a command to run differently than expected.\
-⇒ In this example, we do not use double quotes when using our variable. Therefore, the “cd” command is misinterpreted and gives the error message you see below
-
-```
-#!/bin/bash
-drectory_name="lets defend"
-cd $directory_name
-// 
-cd lets defend
-```
-
-<figure><img src=".gitbook/assets/bash34.png" alt=""><figcaption></figcaption></figure>
-
-The cd command read the word "defend" as an argument, but, because it did not expect such an argument, it could not understand it and gave an error. So, what would happen if we used it in the following way?
-
-```
-
-#!/bin/bash
-drectory_name="lets defend"
-cd "$directory_name"
-// 
-cd 'lets defend'
-```
+<figure><img src=".gitbook/assets/4134534_c110_7.jpg" alt=""><figcaption></figcaption></figure>
 
 ***
 
-### <mark style="color:green;">Untrusted Inputs</mark>
+## <mark style="color:purple;">Readings Arguments</mark>
 
-bash scripts accept untrusted input allows attackers to execute malicious code. To prevent this type of attack, we must always verify and sanitize user inputs.
+arguments are the values given to the command line at the time a command or a Bash script is run. Bash enumerates these arguments like \`$1\`, \`$2\`, \`$3\`, etc. and makes them accessible.&#x20;
 
-Example : we ask the user for a file name and print the contents of the file with that name to the console
+* &#x20;\`$0\`: Represents the name of the command or script.
+* \`$1\`, \`$2\`, \`$3\`,...: these are used to access the first second, third, etc. arguments on the command line.
+* \`$@\`: Represents all command line arguments as an array.
+* \`$#\`: Represents the total number of arguments given on the command line.
+* \`$\*\`: Represents all command line arguments as an array, but the arguments are concatenated into a single string.
+* \`$?\`: Represents the exit status of the last command executed
 
-```
-#!/bin/bash
-echo "Input file name:"
-read file
-cat $file
-```
-
-this is an untrusted script : A malicious user may attempt to wipe the entire file system by entering a malicious command like “rm -rf /” to the file variable\
-⇒ in this example, the variable file checks for a file (-f $file) and checks if it has a .txt extension ($file == \*.txt). If these conditions are not met, an error message is given to the user.
+For example, we can print a message using command line arguments in the following script:
 
 ```
 #!/bin/bash
-echo "input file name:"
-read file
-if [[ -f $file && $file == *.txt ]]; then
-    cat "$file"
+
+echo "Arguments from command line:"
+echo "Argument 1: $1"
+echo "Argument 2: $2"
+echo "Argument 3: $3"
+echo "All Arguments: $@"
+echo "Total Arguments Count: $#"
+```
+
+To run this script, you can provide arguments on the command line like this:
+
+```
+./arguments.sh Hello World!
+```
+
+<figure><img src=".gitbook/assets/bash22.png" alt=""><figcaption></figcaption></figure>
+
+### <mark style="color:$success;">shift</mark>
+
+used to shift command line arguments and change access. Each shift command causes command line arguments to shift to the next position
+
+```
+#!/bin/bash
+
+echo "Arguments from command line:"
+echo "Argument 1: $1"
+
+shift
+
+echo "After shifting"
+echo "Argument 1: $1"
+```
+
+<figure><img src=".gitbook/assets/bash23.png" alt=""><figcaption></figcaption></figure>
+
+### <mark style="color:$success;">Getopts</mark>
+
+getopts is a structure used in bash script to parse command line arguments and catch certain flags or options. It is often used with a “while” loop. With getopts you can add certain flags or options to your script and have the user use those flags or options in a certain way.
+
+```
+#!/bin/bash
+
+while getopts ":a:bc" opt; do
+  case ${opt} in
+    a)
+      echo "Option a is passed with value: $OPTARG"
+      ;;
+    b)
+      echo "Option b is passed"
+      ;;
+    c)
+      echo "Option c is passed"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      ;;
+  esac
+done          
+```
+
+In this example, we are checking three separate options using the -a, -b, and -c flags.
+
+<figure><img src=".gitbook/assets/bash24.png" alt=""><figcaption></figcaption></figure>
+
+In the example below, the user is allowed to use either "-o" or "--option" options.\
+This is a usage that provides comfort to the user when too many arguments are used.
+
+```
+#!/bin/bash
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -o|--option)
+            option_value="$2"
+            echo "Option value: $option_value"
+            shift 2
+            ;;
+        *)
+            echo "Invalid Argument: $1"
+            exit 1
+            ;;
+    esac
+    shift
+done
+```
+
+#### <mark style="color:$success;">Shell Expansion</mark>&#x20;
+
+property used to expand or evaluate special characters or expressions in a string. Expansion is performed immediately after a string on the command line, allowing the string to be replaced with a new value or otherwise manipulated
+
+Bash shell expansion supports the following special characters or expressions :
+
+* **Tilde expansion**\
+  (\~): The tilde character represents a user's home directory (\`$HOME\`). For example, we can combine \`\~\` with \`\~/Documents\` to represent the user's "Documents" directory.
+* **Parameter expansion**\
+  ($): The \`$\` character represents the value of a variable. For example, we can get the user's home directory using \`$HOME\`.
+* **Arithmetic expansion**\
+  (()):  The expression \`(( ))\` is used to evaluate arithmetic expressions. For example, the expression \`(( x = 5 + 3 ))\` assigns the value 5 + 3 to the variable \`x\`.
+* **Conditional Expression Expansion**\
+  The \`(( ))\` expression is used to evaluate conditional expressions. For example, with the expression \`(( x > y ))\` we can check whether the value \`x\` is greater than \`y\`.
+* **Brace Expansion**\
+  (${ }): The \`${ }\` expression is used to retrieve or manipulate the values of variables or string expressions. For example, with \`${var}\` we can get the value of the variable \`var\`.
+* **Command Substitution**\
+  (\` \` or $( )): Command substitution is used to output a command and can be performed in two different ways by using backquotes (\` \`) or \`$()\`. For example, with the expression \`result=$(date)\` we can assign the output of the \`date\` command to the \`result\` variable.
+* **Arrays Expansion**\
+  (${\[ ]}): The \`${\[ ]}\` expression is used to access the elements of arrays or perform operations related to the array. For example, we can access the first element of an array with the expression \`${array\[0]}\`.
+
+```
+#!/bin/bash
+
+# Tilde Expansion (~)
+echo "Home Directory: $HOME"
+echo "Documents Directory: ~/Documents"
+
+# Parameter Expansion ($)
+greeting="Hello, World!"
+echo "Greeting: $greeting"
+
+# Arithmetic Expansion (())
+(( x = 5 + 3 ))
+echo "x = $x"
+
+# Conditional Expression Expansion (())
+x=10
+y=5
+if (( x > y )); then
+  echo "x is greater than y"
 else
-    echo "Please input .txt file name"
+  echo "x is not greater than y"
 fi
+
+# Brace Expansion (${ })
+name="John"
+echo "Hello, ${name}!"
+
+# Command Substitution (` ` or $( ))
+current_date=$(date)
+echo "Current Date: $current_date"
+
+# Array Expansion (${[ ]})
+numbers=(10 20 30 40 50)
+echo "First Number: ${numbers[0]}"
 ```
 
-⇒ example, the user-input variable filename is used directly in the cp command. A malicious user can change the target filename, causing unexpected results.
+<figure><img src=".gitbook/assets/bash25.png" alt=""><figcaption></figcaption></figure>
+
+When bash receives a command that a user types on the keyboard or comes from a bash script, it splits it into words. In doing so, Bash can perform seven different operations on words, which can change how they are interpreted and thus the output. There are 7 different expansions that we can use in Bash. Now let's examine them one by one:
+
+*   ### <sub><mark style="color:$success;">Brace Expansion<mark style="color:$success;"></sub> <sub></sub><sub>:</sub>&#x20;
+
+    ### <sub>race Expansion is often used to create variations of a particular pattern in Bash : This command creates five different files named file\_1.txt, file\_2.txt, file\_3.txt, file\_4.txt and file\_5.txt.</sub>
 
 ```
-#!/bin/bash
-echo "input file name:"
-read filename
-cp $filename /tmp/backup
+touch file_{1..5}.txt
 ```
 
-The correct approach is to check and sanitize the user's input:
-
-```
-#!/bin/bash
-echo "input file name:"
-read filename
-if [[ $filename =~ ^[a-zA-Z0-9_-]+$ ]]; then
-    cp "$filename" /tmp/backup
-else
-    echo "invalid file name."
-fi
-```
-
-A very common mistake is to continue the execution of the script without verifying whether these commands are successfully executed or not. If not, our script may start producing unpredictable results.
-
-In our example, we “ **scp** ” a file to a remote server and then delete the local file. Although everything seems working fine, we actually have a faulty code because we have not checked whether the required connection for “ **scp** ” is available or not, whether the “ **scp** ” suns successfully or not.
-
-```
-#!/bin/bash
-remote_host="192.168.0.100"
-remote_user="user"
-filename="important.txt"
-
-scp $remote_user@$remote_host:$filename /tmp/backup >/dev/null 2>&1
-echo "File copied successfully."
-rm -rf filename
-```
-
-⇒ First, we could have tested the remote connection, and continued if the remote connection was healthy. We delete the local file after checking the status of the **scp** command to make sure everything is fine
+Also, this can be useful if a command is run repeatedly with different parameters.\
+This script checks whether the files named "file1.txt", "file2.txt" and "file3.txt" are readable
 
 ```
 #!/bin/bash
-remote_host="192.168.0.100"
-remote_user="user"
-filename="important.txt"
-
-ssh $remote_user@$remote_host "ls -l $filename" >/dev/null 2>&1
-if [ $? -eq 0 ]; then
-
-    scp $remote_user@$remote_host:$filename /tmp/backup
-    if [ $? -eq 0 ]; then
-        echo "File copied, deleting orginal"
-        rm -rf filename
+for i in {1..3}; do
+    if [[ -r "file${i}.txt" ]]; then
+        echo "You have read permission for file${i}.txt"
     else
-        echo “file not send”
-else
-    echo "Connection problem"
-fi
+        echo "You do not have read permission for file${i}.txt"
+    fi
+done
 ```
 
-In these examples the use of **\[ $? The use of -eq 0 ]**&#x20;
+<figure><img src=".gitbook/assets/bash35.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/sec-table.png" alt=""><figcaption></figcaption></figure>
+* ### <mark style="color:$success;">Tilde Expansion</mark>
 
-***
+-a tilde expansion is actually replacing a path that points to a user's home directory.\
+\- instead of taking risks by expressing the directory of a user whose name we know as /home/\<username>/ we can express it as **\~\<username>** .
 
-### <mark style="color:green;">Command Injection</mark>
-
-hen writing bash scripts, built-in bash commands such as **`eval`**, **`system`** **`exec`** can be exploited by a malicious user if not used carefully. For this reason, we should avoid using these commands in the script as much as possible,
-
-⇒ Scenario : In this script, the file name is taken from the user and requested to list this file with the \` **ls** \` command. However, if a malicious user inputs this as: \` **my\_file; rm -rf \*** \` the \`rm -rf \*\` command is also run after the \`ls\` command and all files in the current directory are deleted. We should still note that this may vary depending on the bash version running on the system.
-
-To prevent such malicious command injections
+<figure><img src=".gitbook/assets/shell-table.png" alt=""><figcaption></figcaption></figure>
 
 ```
 #!/bin/bash
-echo "Input Command:"
-read user_command
-
-case $user_command in
-  "ls")
-    ls
-    ;;
-  "pwd")
-    pwd
-    ;;
-  *)
-    echo "Not Allowed"
-    ;;
-esac
+echo ~
+echo ~root
+echo ~/Documents
+echo ~root/Documents
+echo ~+
+echo ~-               
 ```
 
-EX : In this example, the `tr` command is used to ensure that the filename contains only alphanumeric characters. This prevents command injection because special characters and spaces are not included.
+<figure><img src=".gitbook/assets/bash37.png" alt=""><figcaption></figcaption></figure>
 
-```
-#!/bin/bash
-echo "Input Command"
-read user_command
-user_command=$(echo $file_name | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
-eval $user_command
-```
 
-***
 
-### <mark style="color:$success;">Path Traversal Errors</mark>
+* ### <mark style="color:$success;">Parameter and Variable Expansion</mark>
 
-If you accept file paths as user input, you risk allowing an attacker to read or overwrite an unwanted file.\
-⇒ if an attacker runs this script and enters “../../etc/passwd” as the filename, this allows the attacker to be able to read the passwd file on the system.
+used to get the value of a variable. This variable can be a variable that we define in the script, or it can be a parameter that we give from the command line when calling our script
+
+**Default Values:** If a variable is not defined, a default value can be assigned during expansion. We can use it as **${var:-default\_value}.** \
+In this example, if the variable **name** is not defined, it will output "Unknown".
 
 ```
 #!/bin/bash
-echo "Please enter the name of the file you want to read:"
-read file
-cat $file      
+echo ${name:-"Unknown"}
 ```
 
-Now let's make our script equipped with tighter controls that will eliminate these risks:
+**Error Checking:** If the **${var:?error\_message}** form is used and if the variable is not defined, it will generate an error message and stop the script.
 
 ```
 #!/bin/bash
-echo "Please enter the name of the file you want to read:"
-read file
-
-# Let's check if the filename is trying to change the root directory
-if [[ "$file" == *..* ]]; then
-    echo "Unwanted input."
-    exit 1
-fi
-
-# Let's check if the filename starts with “/”.
-if [[ "$file" == /* ]]; then
-    echo "Unwanted input."
-    exit 1
-fi
-
-# Let's check if the filename is under a certain directory
-base_directory="/var/myapp"
-full_path="$base_directory/$file"
-if [[ "$full_path" != "$base_directory/"* ]]; then
-    echo "The file must be under a specific directory."
-    exit 1
-fi
-
-# If all checks are passed we can print the file to the screen
-cat "$full_path"
+echo ${name:?"Name is not set."}
 ```
 
-***
+**Substring Replacement: ${var/find/replace}** usage replaces the “ **find** ” expression in the “ **var** ” variable with “ **replace** ”.  " **Hello, Earth!** " output after you run the script.
 
-### <mark style="color:green;">Faulty Control Structures</mark>
+```
+#!/bin/bash
+greeting="Hello, World!"
+echo ${greeting/World/Earth} 
+```
 
-Incorrect use of control structures such as “if-else”, “switch-case”, “for” and “while” may cause the script to malfunction
+we can treat all parameters as an array. And, we can do it by using $@ or $\* expression.
 
 ```
 #!/bin/bash
 
-echo "Input Number: "
-read number
-
-while [ $number -gt 0 ]
+for prms in "$@"
 do
-    echo $number
-    number=$((number-1))
+  echo "Parameter: $prms"
 done
 ```
 
-this script will throw an error if the user enters a string instead of a number because the size of the string cannot be compared to a number. , lets fix it
+<figure><img src=".gitbook/assets/bash38.png" alt=""><figcaption></figcaption></figure>
+
+Using the IFS variable, you can split a string in bash by a specific character or string of characters. For example, you can set the IFS variable to a comma to split a comma-separated array:
 
 ```
 #!/bin/bash
 
-echo "Enter a number: "
-read number
-
-# Checks if the input is a number.
-if ! [[ $number =~ ^[0-9]+$ ]]
-then
-    echo "Incorrect entry: You must enter a number."
-else
-    while [ $number -gt 0 ]
-    do
-        echo $number
-        number=$((number-1))
-    done
-fi
-```
-
-***
-
-### <mark style="color:green;">Race Condition Errors</mark>
-
-These errors occur when two or more processes or threads are trying to access the same resource and that resource's state changes unexpectedly.
-
-This script checks if a particular file exists. If the file does not exist, it creates the file. However, this script is open to "race condition" errors. If two copies are run at the same time, both check if the file exists. If the file does not exist, both try to create the file. In this case, while the first script creates the file, the second script still thinks that the file does not exist and tries to create the file.
-
-```
-#!/bin/bash
-
-file="/tmp/testfile"
-if [ ! -e $file ]
-then
-    touch $file
-    echo "File created."
-else
-    echo "The file already exists."
-fi
-```
-
-To resolve this error, we need to minimize the time interval between creating the file and checking the existence of the file: Instead of asking first “Does the file exist?” → it tries `touch` immediately.
-
-* If the file **still doesn't exist** → `touch` succeeds → the file is created.
-* If the file **already exists** → `touch` fails → the script knows the file exists or that it couldn't create it.
-
-```
-#!/bin/bash
-
-file="/tmp/testfile"
-if ! touch $file 2>/dev/null
-then
-    echo "The file could not be created."
-else
-    echo "File created."
-fi
-```
-
-***
-
-### <mark style="color:green;">Faulty Error Management</mark>
-
-This script takes the filename entered by the user and copies it to the “/tmp/” directory. if the file does not exist, the “cp” command returns an error message. This script will not catch this error and still prints the message that says "File copied successfully."
-
-```
-#!/bin/bash
-
-read -p "Which file would you like to copy? " file
-
-cp $file /tmp/
-
-echo "File successfully copied."
-```
-
-to resolve this error&#x20;
-
-```
-#!/bin/bash
-
-
-read -p "Which file would you like to copy? " file
-
-
-if cp $file /tmp/
-then
-    echo "File successfully copied."
-else
-    echo "File not copied."
-fi
-```
-
-***
-
-## <mark style="color:green;">Security and Monitoring with Bash</mark>
-
-how we can use bash scripts in security operations :
-
-* you detect too many attempts from a particular IP address
-* you can block that IP address automatically using a bash script.
-* you see a specific error message
-* &#x20;you can use a script to detect that error automatically and implement an automated solution.
-* check the security status of our systems and run security scans of them regularly. These scans can help us identify outdated software, open ports, and other potential vulnerabilities.
-* automatically run these scans at a specified time intervals and provide us with a report
-* generate an automatic response using a bash script. This response can secure our systems, collect traces of the attack, and even block the attacker.
-* detect a specific network traffic pattern, or it can be used to monitor traffic from a specific IP address or port
-* perform various attacks automatically on target systems using a bash script. This script can also collect and analyze the results of these attacks, thus provide us valuable information.
-
-\
-We scan the “ **/var/log/auth.log** ” file for “ **Failed password for invalid user** ” statements and if this statement is found, we send an email to [security@letsdefend.io](mailto:security@letsdefend.io) . We should pay attention to the fact that this pattern exists, that means, at least 1 "Failed password for invalid user" has occurred.
-
-```
-#!/bin/bash
-
-LOGFILE="/var/log/auth.log"
-PATTERN="Failed password for invalid user"
-RECIPIENT="security@letsdefend.io"
-SUBJECT="Failed Login Attempts For Invalid Users"
-
-if grep -q "$PATTERN" $LOGFILE
-then
-    echo "Error message found: $PATTERN" | mail -s "$SUBJECT" $RECIPIENT
-fi
-```
-
-make this script run at a certain time every day.
-
-```
-chmod +x /security/failed_login_check.sh
-```
-
-adding a cronjob : open the cron file with the **crontab -e** command and add the following line in it
-
-our script will run at 00:01 every night, and we will receive a notification email if it finds " **Failed password for invalid user** " in the **auth.log** file.
-
-```
-1 0 * * * /security/failed_login_check.sh
-```
-
-lets improve our script : write which user made this attempt from which IP address
-
-```
-#!/bin/bash
-
-LOGFILE="/var/log/auth.log"
-PATTERN="Failed password for invalid user"
-RECIPIENT="email@address.com"
-SUBJECT="Invalid Login Attempts Detected"
-
-while IFS= read -r line; do
-    if [[ $line =~ $PATTERN ]]; then
-        rhost=$(echo "$line" | awk -F'[= ]' '{print $(NF-4)}')
-        user=$(echo "$line" | awk -F'[= ]' '{print $(NF-5)}')
-        message+="rhost: $rhost, user: $user"$'\n'
-    fi
-done < "$LOGFILE"
-
-if [[ -n $message ]]; then
-    echo -e "Invalid User Login Attempts detected:\n$message" | mail -s "$SUBJECT" $RECIPIENT
-fi
-```
-
-it will send us an e-mail similar to the following content:
-
-```
-SUBJECT: Invalid Login Attempts Detected
-
-Invalid User Login Attempts detected:
-rhost: 192.168.207.1, user: letsadefenda
-rhost: 192.168.207.1, user: letsadefenda
-rhost: 192.168.207.1, user: letsadefenda
-rhost: 192.168.207.1, user: letsbdefendb
-rhost: 192.168.207.1, user: letsbdefendb
-rhost: 192.168.207.1, user: letsbdefendb
-```
-
-we can't stop here, now let's block the IP addresses that get " **Failed password for invalid user** " error more than 3 times in a row.
-
-```
-#!/bin/bash
-
-LOGFILE="/var/log/auth.log"
-PATTERN="Failed password for invalid user"
-RECIPIENT="email@address.com"
-SUBJECT="Invalid Login Attempts Detected"
-BLOCK_THRESHOLD=3
-declare -A failed_attempts
-
-while IFS= read -r line; do
-    if [[ $line =~ $PATTERN ]]; then
-        rhost=$(echo "$line" | awk -F'[= ]' '{print $(NF-4)}')
-        user=$(echo "$line" | awk -F'[= ]' '{print $(NF-5)}')
-        message+="rhost: $rhost, user: $user"$'\n'
-        
-        if [[ -n ${failed_attempts[$rhost]} ]]; then
-            ((failed_attempts[$rhost]++))
-        else
-            failed_attempts[$rhost]=1
-        fi
-       if (( failed_attempts[$rhost] > BLOCK_THRESHOLD )); then
-            ufw insert 1 deny from $rhost to any
-        fi
-    fi
-done < "$LOGFILE"
-
-if [[ -n $message ]]; then
-    echo -e "Invalid User Login Attempts detected:\n$message" | mail -s "$SUBJECT" $RECIPIENT
-fi
-```
-
-The example below analyzes the system logs and looks for “ERROR” statements and reports to us the applications that have generated more alarms than the threshold we have given
-
-```
-#!/bin/bash
-
-LOGFILE="/var/log/syslog"
-ERROR_THRESHOLD=5
-
-declare -A app_errors
-
-while IFS= read -r line; do
-    if [[ $line =~ "ERROR" ]]; then
-        app=$(echo "$line" | awk -F' ' '{print $5}')
-        if [[ -n ${app_errors[$app]} ]]; then
-            ((app_errors[$app]++))
-        else
-            app_errors[$app]=1
-        fi
-    fi
-done < "$LOGFILE"
-
-echo "Faulty Apps:"
-
-for app in "${!app_errors[@]}"; do
-    if (( app_errors[$app] > ERROR_THRESHOLD )); then
-        echo "$app: ${app_errors[$app]} Errors"
-    fi
-done
-```
-
-***
-
-## <mark style="color:$success;">Network Monitoring with Bash</mark>
-
-monitors our communication with the IP addresses we specify, over the ping times, with a bash script:
-
-```
-
-#!/bin/bash
-
-IP_ADDRESSES=("8.8.8.8" "1.1.1.1" "192.168.1.3")
-PING_INTERVAL=3
-
-//  store the last ping time and ping response time for each IP address.
-declare -A ping_results
-
-while true; do
-    for ip in "${IP_ADDRESSES[@]}"; do
-        // filters only the first response in the ping result
-        // gets the response time in the ping result
-        ping_result=$(ping -c 1 -W 1 $ip | grep 'icmp_seq=1' | awk -F' ' '{print $7,$8}')
-        current_time=$(date +"%Y-%m-%d %H:%M:%S")
-        if [[ -n $ping_result ]]; then
-            ping_time=$(echo $ping_result | awk -F'=' '{print $2}')
-            ping_results[$ip]="$current_time $ping_time ms"
-        else
-            ping_results[$ip]="$current_time Timeout"
-        fi
-    Done
-
-    clear
-    printf "%-15s \e[1;36m%-55s\e[0m\n" "Target IP" "Last Ping Time      Last Reply Duration"
-    printf "=====================================================================\n"
-
-    for ip in "${IP_ADDRESSES[@]}"; do
-        result="${ping_results[$ip]}"
-        printf "%-15s " "$ip"
-        if [[ $result == *Timeout* ]]; then
-            printf "\e[1;31m%-55s\e[0m\n" "${result% }"
-        else
-            printf "\e[1;32m%-55s\e[0m\n" "${result% }"
-        fi
-    done
-
-    sleep $PING_INTERVAL
-done
-```
-
-<figure><img src=".gitbook/assets/bash42.png" alt=""><figcaption></figcaption></figure>
-
-***
-
-### <mark style="color:$success;">Service Monitoring</mark>
-
-shows the status of the ports we've identified on the target systems
-
-```
-#!/bin/bash
-
-IP_ADDRESSES=("192.168.1.1" "192.168.1.2" "192.168.1.3")
-PORTS=("80" "443" "22")
-PING_TIMEOUT=1
-
-declare -A port_results
-
-while true; do
-    for ip in "${IP_ADDRESSES[@]}"; do
-        for port in "${PORTS[@]}"; do
-            if nc -z -w $PING_TIMEOUT $ip $port >/dev/null 2>&1; then
-                port_results["$ip:$port"]="Open"
-            else
-                port_results["$ip:$port"]="Closed"
-            fi
-        done
-    Done
-
-   clear
-    printf "%-15s %-10s %-10s %-10s\n" "IP Address" "${PORTS[0]}" "${PORTS[1]}" "${PORTS[2]}"
-    printf "============================================================\n"
-
-    for ip in "${IP_ADDRESSES[@]}"; do
-        printf "%-15s " "$ip"
-        for port in "${PORTS[@]}"; do
-            result="${port_results["$ip:$port"]}"
-            if [[ $result == "Open" ]]; then
-                printf "\e[1;32m%-10s\e[0m" "$result"
-            else
-                printf "\e[1;31m%-10s\e[0m" "$result"
-            fi
-        done
-        printf "\n"
-    done
-
-    sleep $PING_TIMEOUT
+my_string="LetsDefend is ,one of the ,best resources on cybersecurity"
+
+IFS=','
+for word in $my_string
+do
+  echo $word
 done
              
 ```
 
-<figure><img src=".gitbook/assets/bash43.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/bash40.png" alt=""><figcaption></figcaption></figure>
 
-***
+### <mark style="color:$success;">Command Substitution</mark>
 
-## <mark style="color:$success;">Bandwidth Monitoring</mark>
-
-monitor the bandwidth of a selected network interface and send notification by email when a certain value is exceeded:
+Every time you run this script, the “ **now** “ variable will be created with the current date and will produce a different output each time.
 
 ```
 #!/bin/bash
 
-INTERFACE="eth0"
-INTERVAL=5
-THRESHOLD=1000000  # An example threshold value (in bytes)
+now=$(date)
+echo "The current date and time is: $now"
+```
 
-declare -A bandwidth_results
+we do not define any variables and we output the ls command and use it at runtime.
 
-send_email() {
-    recipient="noc@letsdefend.io"  # Recipient email address
-    subject="Bandwidth Threshold Exceeded"
-    body="Interface: $INTERFACE, RX: $rx_speed bytes/s, TX: $tx_speed bytes/s"
-    
-    echo "$body" | mail -s "$subject" "$recipient"
-}
+```
+#!/bin/bash
 
-while true; do
-    rx_old=$(cat "/sys/class/net/$INTERFACE/statistics/rx_bytes")
-    tx_old=$(cat "/sys/class/net/$INTERFACE/statistics/tx_bytes")
-    sleep $INTERVAL
-    rx_new=$(cat "/sys/class/net/$INTERFACE/statistics/rx_bytes")
-    tx_new=$(cat "/sys/class/net/$INTERFACE/statistics/tx_bytes")
+echo "Directory contents: $(ls)"
+```
 
-    rx_speed=$(( ($rx_new - $rx_old) / $INTERVAL ))
-    tx_speed=$(( ($tx_new - $tx_old) / $INTERVAL ))
+we can use them together : we list the disk space used by the files in our current directory.
 
-    current_time=$(date +"%Y-%m-%d %H:%M:%S")
-    bandwidth_results["$INTERFACE"]="$current_time: RX: $rx_speed bytes/s, TX: $tx_speed bytes/s"
+```
+#!/bin/bash
 
-    clear
-    printf "%-15s %-30s\n" "Interface" "Bandwidth"
-    printf "========================================\n"
+echo "File sizes: $(du -h $(pwd))"
+```
 
-    for interface in "${!bandwidth_results[@]}"; do
-        result="${bandwidth_results[$interface]}"
-        printf "%-15s %-30s\n" "$interface" "$result"
-    done
+### <mark style="color:$success;">Arithmetic Expansion</mark>
 
-    if [[ $rx_speed -gt $THRESHOLD || $tx_speed -gt $THRESHOLD ]]; then
-        send_email
-    fi
+```
+#!/bin/bash
+
+echo $((5 + 2)) # Output: 7
+echo $((5*2)) # Output: 10
+echo $((10 / 2)) # Output: 5
+echo $((10 - 5)) # Output: 5
+
+
+num1=15
+num2=5
+echo $((num1 / num2)) # Output: 3
+```
+
+### <mark style="color:$success;">Word Splitting</mark>
+
+process of converting a string into multiple values by splitting it according to a certain separator. It is often used when looping over an array or when you want to split the output of a command into multiple values.
+
+```
+#!/bin/bash
+
+my_string="LetsDefend is one of the best resources on cybersecurity"
+
+for word in $my_string
+do
+  echo $word
+done
+```
+
+<figure><img src=".gitbook/assets/bash39.png" alt=""><figcaption></figcaption></figure>
+
+how bash handles quotes. Word splitting does not occur when a string is in double quotes.\
+example
+
+```
+#!/bin/bash
+
+my_string="LetsDefend is one of the best resources on cybersecurity"
+
+for word in “$my_string”
+do
+  echo $word
+done
+```
+
+<figure><img src=".gitbook/assets/bash-split.png" alt=""><figcaption></figcaption></figure>
+
+#### <mark style="color:$success;">Pathname Expansion</mark>
+
+Bash uses various special characters and structures for pathname expansion:
+
+<figure><img src=".gitbook/assets/shell-exp-t.png" alt=""><figcaption></figcaption></figure>
+
+```
+#!/bin/bash
+
+# It lists all txt files.
+ls *.txt
+
+# Lists all files with a single character name.
+ls ?
+
+# List all files with a, b or c in their name.
+ls *[abc]*
+
+# Lists all files whose names match a given number range (1-3).
+ls *[1-3]*
+```
+
+,shows the **.log** files under the **/var/log/** directory and how many lines of data are in them.
+
+```
+#!/bin/bash
+
+
+dir_path="/var/log"
+
+for file in $dir_path/*.log
+do
+  line_count=$(wc -l <"$file")
+  echo "$file file has $line_count line log"
 done
 ```
 
 ***
 
-### <mark style="color:$success;">Monitoring Security Violations</mark>
+#### <mark style="color:$success;">RegEx and Bash</mark>
 
-let's query the IP addresses of the users who have successfully logged into the system in the AbuseIP database, and write a script that generates an alarm if the reputation of the IP address is high:
+* RegEx is a set of languages and techniques used to identify specific patterns in text and perform operations such as searching, matching and replacing according to these patterns.
+
+For example, you can check if a particular word occurs in the text.
 
 ```
 #!/bin/bash
 
-API_KEY="YOUR_ABUSEIP_API_KEY"
+# Check if a string matches a pattern
+string="Hello, World!"
+pattern="^Hello"
 
-get_abuse_report() {
-    local ip=$1
-    local result=$(curl -s "https://api.abuseipdb.com/api/v2/check?ipAddress=$ip&maxAgeInDays=90" \
-        -H "Key: $API_KEY" \
-        -H "Accept: application/json")
-    echo "$result"
-}
+if [[ $string =~ $pattern ]]; then
+    echo "Pattern matched!"
+else
+    echo "Pattern not matched!"
+fi
+```
 
-analyze_report() {
-    local report=$1
-    local ip=$(echo "$report" | jq -r '.data.ipAddress')
-    local abuse_confidence_score=$(echo "$report" | jq -r '.data.abuseConfidenceScore')
-    local is_suspicious=false
+For example, removing parameters from a URL or removing spaces in text
 
-    if [[ $abuse_confidence_score -gt 50 ]]; then
-        is_suspicious=true
+```
+#!/bin/bash
+
+# Replace occurrences of a word in a string
+string="I love cats. Cats are amazing."
+pattern="cats"
+replacement="dogs"
+
+new_string="${string//$pattern/$replacement}"
+echo "New string: $new_string"      
+```
+
+<figure><img src=".gitbook/assets/bash30.png" alt=""><figcaption></figcaption></figure>
+
+For example, checking the validity of an email address or verifying the accuracy of a phone number
+
+```
+#!/bin/bash
+
+# Function to validate email address using RegEx
+validateEmail() {
+    email=$1
+    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+
+    if [[ $email =~ $pattern ]]; then
+        echo "Email address is valid."
+    else
+        echo "Email address is invalid."
     fi
-
-    echo "IP: $ip"
-    echo "Abuse Confidence Score: $abuse_confidence_score"
-    if $is_suspicious; then
-        echo "Suspicious IP address detected: $ip"
-        # You can add alarms or other actions here
-    fi
 }
 
-last_logins=$(last | awk '!/wtmp/ && !/tty/ && !/boot/  {print $3}')
-for ip in $last_logins; do
-    report=$(get_abuse_report "$ip")
-    analyze_report "$report"
-done
+# Prompt user to enter an email address
+echo "Enter an email address:"
+read user_email
+
+# Call the validateEmail function with the entered email address
+validateEmail "$user_email"
+             
 ```
 
-<figure><img src=".gitbook/assets/bash44.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/bash31.png" alt=""><figcaption></figcaption></figure>
 
-***
+For example, let's have an "access.log" file of a web server like the one below:
 
-### <mark style="color:$success;">Checking for Security Updates</mark>
+```
+127.0.0.1 - - [28/May/2023:12:34:56 +0000] "GET /sayfa1 HTTP/1.1" 200 1234 "https://www.example.com" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+127.0.0.1 - - [28/May/2023:12:34:57 +0000] "GET /sayfa2 HTTP/1.1" 200 5678 "https://www.example.com" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+...
+```
 
-In the example below, we check for unapplied security updates on an Ubuntu system and, if available, send a message to the Slack channel where you enter the webhook url
-
-This script checks for security updates in the update list using the apt package manager. If there are any unapplied security updates, it reports them to the Slack channel.
+we want to see the "User Agent" strings in this file in bulk:
 
 ```
 #!/bin/bash
 
-HOSTNAME=$(hostname)
-SLACK_WEBHOOK_URL="YOUR_SLACK_WEBHOOK_URL"
+log_file="access.log"
 
-check_security_updates() {
-    security_updates=$(apt list --upgradable 2>/dev/null | grep -i security)
-    if [[ -n $security_updates ]]; then
-        message="Pending security updates detected:\n$security_updates"
-        send_slack_message "$message"
-     fi
-}
-
-send_slack_message() {
-    local message="$1"
-    curl -X POST -H "Content-type: application/json" --data "{\"text\":\"[$HOSTNAME] $message\"}" "$SLACK_WEBHOOK_URL" >/dev/null 2>&1
-}
-
-check_security_updates
-```
-
-***
-
-### <mark style="color:$success;">Strong Password and User Management</mark>
-
-example, let's write a script that detects accounts that are set to "never expire" which has actually no password change policy, on the system where the script is running:
-
-```
-#!/bin/bash
-
-check_never_expire_passwords() {
-    echo "Users with Never Expire Password:"
-    echo "======================================"
-    awk -F: '($2=="*" || $2=="!" || $2=="!!") {print $1}' /etc/shadow
-    echo ""
-}
-
-check_never_expire_passwords
-```
-
-***
-
-### <mark style="color:$success;">Network Security Audit</mark>&#x20;
-
-identify network security issues by monitoring network interfaces, network traffic, and open port
-
-* The **ss -tuln** command lists **TCP (-t)** connections and **UDP (-u)** connections. It also shows the ports that are being listened **(-l)** and numeric **(-n)** port numbers.
-* **The split($5, a, ":")** command parses the IP address and port number and assigns it to array a
-* The **lsof -i :$port** command finds the process listening on a particular port.
-
-```
-#!/bin/bash
-
-get_listening_ports() {
-    ss -tuln | awk 'NR>1 && $5 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:/ {split($5, a, ":"); print a[2]}' | sort -nu
-}
-
-get_process_for_port() {
-    local port=$1
-    local pid=$(lsof -i :$port | awk 'NR==2 {print $2}')
-    local process=$(ps -p $pid -o comm=)
-    echo "Port: $port, Process: $process"
-}
-
-echo "Open Ports on $(hostname):"
-echo "======================"
-
-listening_ports=$(get_listening_ports)
-
-for port in $listening_ports; do
-    get_process_for_port $port
-done
-```
-
-<figure><img src=".gitbook/assets/bash-audit.png" alt=""><figcaption></figcaption></figure>
-
-***
-
-### <mark style="color:$success;">Checking File and Directory Permissions</mark>
-
-Let's write a script that takes the uid and home directory fields from the passwd file, then checks the permissions of the files and folders in each user's home directory and reports the problematic ones:
-
-```
-#!/bin/bash
-
-PASSWD_FILE="/etc/passwd"
-
-check_directory_permissions() {
-    echo "Auditing Home Directories:"
-    echo "=============================="
-
-    while IFS=: read -r username _ uid _ _ home _; do
-        echo "User: $username"
-        echo "----------------"
-
-        user_directory="$home"
-
-        find "$user_directory" \( -type d -not -perm 755 \) -print
-        find "$user_directory" \( -type f -uid "+$uid" -perm /u=s \) -print
-        echo ""
-    done < "$PASSWD_FILE"
-}
-
-check_directory_permissions
-```
-
-***
-
-## <mark style="color:$success;">Forensic and Incident Response with Bash</mark>
-
-we can use bash scripts for tasks such as :
-
-* searching for network traffic from specific IP addresses
-* &#x20;monitoring changes to a specific file
-* &#x20;looking for a specific error message in the system logs.
-* timeline an attacker's activities&#x20;
-* combine and analyze data collected from multiple systems
-
-## <mark style="color:$success;">analyze a web server access logs</mark>
-
-write a simple script that examines the access.log file of the apache2 web server and finds out how many requests are received from which IP addresses and which http methods.
-
-```
-#!/bin/bash
-
-LOG_FILE="/var/log/apache2/access.log"
-ver ve çık
-if [ ! -f "$LOG_FILE" ]
-then
-    echo "$LOG_FILE not found!"
+# Check if log file exists
+if [ ! -f "$log_file" ]; then
+    echo "Log file $log_file not found."
     exit 1
 fi
-awk '{
-    split($7,method," ")
-    count[method[1]" "$1]++
+
+# Function to extract user agents from log file
+extractUserAgents() {
+    while IFS= read -r line; do
+        user_agent=$(echo "$line" | awk -F'"' '{print $6}')
+        echo "User Agent: $user_agent"
+    done < "$log_file"
 }
-END {
-    for (i in count)
-        print i, count[i]
-}' $LOG_FILE
+
+# Call the extractUserAgents function
+extractUserAgents
 ```
 
-<figure><img src=".gitbook/assets/bash45.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/bash32.png" alt=""><figcaption></figcaption></figure>
 
-Let's assume that we have experienced a security incident and a vulnerability has been exploited in our web application via our "payment" URL, and let's extract the IP addresses that made requests to this URL and how many times each one made a request.
-
-```
-#!/bin/bash
-
-echo "GET requests to /payment:"
-awk '$7 ~ "/payment" && $6 ~ /GET/ {print $1}' /var/log/apache2/access.log | sort | uniq -c | sort -nr
-
-echo "POST requests to /payment:"
-awk '$7 ~ "/payment" && $6 ~ /POST/ {print $1}' /var/log/apache2/access.log | sort | uniq -c | sort -nr
-```
-
-<figure><img src=".gitbook/assets/bash-ir.png" alt=""><figcaption></figcaption></figure>
-
-we can see in the output, the IP address of 192.168.207.130 appeared here with 29 GET Requests. Now let's write a script that checks if there is a failed or success login to our system from this IP address:
+we want to find e-mail addresses in a text file, check for validity and generate a report
 
 ```
 #!/bin/bash
 
+input_file="input_file.txt"
+output_file="report.txt"
 
-IP_ADDRESS='192.168.207.130'
-
-# Check for successful logins
-echo "Successful logins from $IP_ADDRESS:"
-grep "$IP_ADDRESS" /var/log/auth.log | grep 'Accepted' | awk '{print $1,$2,$3}'
-
-# Check for failed logins
-echo "Failed logins from $IP_ADDRESS:"
-grep "$IP_ADDRESS" /var/log/auth.log | grep 'Failed' | awk '{print $1,$2,$3}'
-```
-
-<figure><img src=".gitbook/assets/bash46.png" alt=""><figcaption></figcaption></figure>
-
-let's try to list the active connections between this IP address and our system.
-
-```
-lsof -i -n | grep "192.168.207.130"
-```
-
-<figure><img src=".gitbook/assets/bash47.png" alt=""><figcaption></figcaption></figure>
-
-check how long the nc process, which is the process that established this connection, has been active. This command will give us an output in the format day:hour:minute:second.
-
-```
-ps -p 68724 -o etime=
-```
-
-In our example, let this output be 1:15:23, so 1 hour 15 minutes and 23 seconds. A script like the following will help us with this
-
-```
-
-#!/bin/bash
-
-# Define the duration
-DAYS=0
-HOURS=2
-MINUTES=30
-
-# Prepare the date modifier string based on the provided days, hours, and minutes
-DATE_MODIFIER=""
-if [ $DAYS -ne 0 ]
-then
-  DATE_MODIFIER="${DATE_MODIFIER}-${DAYS} days "
+# Check if input file exists
+if [ ! -f "$input_file" ]; then
+    echo "Input file $input_file not found."
+    exit 1
 fi
 
-if [ $HOURS -ne 0 ]
-then
-  DATE_MODIFIER="${DATE_MODIFIER}-${HOURS} hours "
-fi
+# Function to validate email address
+validateEmail() {
+    email=$1
+    pattern="^([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$"
 
-if [ $MINUTES -ne 0 ]
-then
-  DATE_MODIFIER="${DATE_MODIFIER}-${MINUTES} minutes"
-fi
+    if [[ $email =~ $pattern ]]; then
+        echo "Valid Email: $email"
+    else
+        echo "Invalid Email: $email"
+    fi
+}
 
-# Calculate the date-time string for the given duration before now
-PAST_DATE=$(date -d"$DATE_MODIFIER" --iso-8601=minutes)
+# Process input file and generate report
+processFile() {
+    while IFS= read -r line; do
+        # Find email addresses using regex
+        email_regex="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+        emails=$(echo "$line" | grep -E -o "$email_regex")
 
-# Find files and directories created after the past date
-echo "Files and directories created after $PAST_DATE:"
-find / -type f -newermt $PAST_DATE
+        # Validate and write emails to output file
+        for email in $emails; do
+            validateEmail "$email" >> "$output_file"
+        done
+    done < "$input_file"
 
-# Find processes started after the past date
-echo "Processes started after $PAST_DATE:"
-ps -eo pid,lstart,cmd --sort=start_time | grep -v "grep" | awk 'BEGIN { command="date -d\""$5" "$4" "$3" "$2" "$6"\" +%Y%m%d%H%M.%S"; command | getline d; close(command); } $1 != "PID" && d > "'$PAST_DATE'"'
+    echo "Report generated: $output_file"
+}
+
+# Call the processFile function
+processFile
 ```
 
-<details>
-
-<summary>سبحانك اللهم وبحمدك, نشهد أن لا إله إلا أنت نستغفرك ونتوب إليك                   </summary>
-
-
-
-</details>
+<figure><img src=".gitbook/assets/bash33.png" alt=""><figcaption></figcaption></figure>

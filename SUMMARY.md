@@ -1,3 +1,3 @@
 # Table of contents
 
-* [Bash Scripting for Blue Team](README.md)
+* [Advanced Bash Scripting](README.md)
