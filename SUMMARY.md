@@ -1,3 +1,3 @@
 # Table of contents
 
-* [GRC](README.md)
+* [Lateral Movement With RDP](README.md)

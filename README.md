@@ -1,297 +1,450 @@
-# GRC
+# Lateral Movement With RDP
 
-<figure><img src=".gitbook/assets/detail_what-is-grc.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/RDP1.png" alt=""><figcaption></figcaption></figure>
 
-***
+## <mark style="color:purple;">**Introduction**</mark>&#x20;
 
-## <mark style="color:purple;">Security Principle: Access Control</mark>
+What is RDP : Remote Desktop Protocol is a protocol that runs over port ‘3389’ and allows you to connect from one system to another over a remote connection , It provides full GUI control of remote systems
 
-Not everyone should have access to every document and information, right? Employees in the accounting department should not have access to human resources documents, and vice versa; individuals in human resources should not have access to accounting documents.The same principle applies to a computer network
+<figure><img src=".gitbook/assets/0_Cwo4GydsjtUrsFtH.jpg" alt=""><figcaption></figcaption></figure>
 
-Access control :
+<mark style="color:$warning;">**How do I enable Remote Desktop?**</mark>
 
-* governs the permissions for different individuals to access various information and resources within the network, specifying when and how they can do so.
-* access control design can cause to unintended access to sensitive information by unauthorized individuals. This poses critical risks to the security of data, applications, and other resources within your network
-* not only determines who can access which information, but also determines when and how users can access this information. This will help implement processes and policies better, comply with the regulations, and improve the overall security of your network
+* Press the Win key to open the Start menu.
+* Open Command Prompt as an admin.
+* Type the below command and press Enter&#x20;
 
-common approaches to access control are :
+```
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /
+```
 
-* &#x20;RBAC (Role-Based Access Control)&#x20;
-* ABAC (Attribute-Based Access Control)
+* Run the below command to enable remote desktop&#x20;
 
-### Role-Based Access Control (RBAC)
-
-* used to determine users' authorization levels and the resources they can access. This ensures that the principle of least privilege is followed and that data privacy is protected.
-* manages user or group access permissions to a system by assigning roles and associating them with specific permissions
-
-<figure><img src=".gitbook/assets/sni9 (1).png" alt=""><figcaption></figcaption></figure>
-
-### Implementation of RBAC
-
-1- **Defining the Role**\
-**2- Assigning Users to Roles**\
-**3- Authorization and Definition of Permissions**\
-**4- Implementation of Access Control**\
-
-
-**Advantages of RBAC:**
-
-* Enhances the organization of business and authorization processes.
-* Management of user roles and permissions becomes easier.
-* Provides security by preventing unauthorized access.
-* Improves collaboration and operational efficiency.
-* Provides traceability and compliance in internal and external audits.
+```
+netsh advfirewall firewall set rule group="remote desktop" new enable=yes
+```
 
 \
-ABAC :
+<mark style="color:$warning;">**How do I disable Remote Desktop?**</mark>
 
-* &#x20;access control principle that permits us to define it through attribute-based access control
-* flexible and effective access control mechanism that can respond to current security needs
+* Press the Win key to open the Start menu
+* Open Command Prompt as an admin
+* Type the below command and press Enter :
+
+```
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 1 /f
+```
+
+* Run the below command to disable remote desktop&#x20;
+
+```
+netsh advfirewall firewall set rule group="remote desktop" new enable=No
+```
+
+\ <mark style="color:$warning;">Common RDP Lateral Movement Techniques</mark>
+
+*   #### **Credential Theft and Reuse** :
+
+    #### Attackers employ multiple methods to harvest credentials:
+
+    #### **1- LSASS Memory Extraction:** Mimikatz recover plaintext passwords from system memory **2- Keystroke Logging:** Capturing credentials during legitimate authentication. 3- **Credential Cache Attacks:** Exploiting Windows' credential storage mechanisms.
+*   #### RDP Session Hijacking :&#x20;
+
+    attackers may hijack existing RDP sessions. This technique involves the following steps : \
+    1- Identifying active RDP sessions on a compromised system
+
+    2- Elevating privileges to the SYSTEM level
+
+    3- Taking control of the session token
+
+    4- Redirecting the session to the attacker's client
+* A common tactic is Pass-the-Hash (PtH), where attackers use captured NTLM hashes to authenticate to systems without needing to crack the password.Once credentials are obtained, attackers use standard RDP clients to connect to other systems where the credentials are valid.
+* #### Exploiting RDP Vulnerabilities : The most infamous example is BlueKeep (CVE-2019-0708), a remote code execution vulnerability that affects older Windows systems , vulnerabilities like DejaBlue allow attackers to move between systems by exploiting RDP security flaws
+
+{% embed url="https://sc1.checkpoint.com/documents/Sales_tools/DemoPoint/Harmony_Endpoint-CS/Topics/Step1.htm" %}
+
+{% embed url="https://www.fortinet.com/resources/cyberglossary/what-is-bluekeep" %}
+
+### <mark style="color:$warning;">Real-World Attack Scenario</mark>
+
+* An attacker gains initial access to a workstation through a phishing email.
+* Using privilege escalation techniques, the attacker obtains administrative access to the workstation.
+* The attacker runs Mimikatz to extract credentials from memory, retrieving the password hash of a domain administrator who previously logged into the system.
+* With these credentials, the attacker establishes RDP connections to other systems within the network.
+* Each compromised system yields new credentials, allowing access to additional systems.
+* Eventually, the attacker reaches the domain controllers and gains persistent control over the entire network.
+
+<mark style="color:$warning;">Notes</mark>&#x20;
+
+* Evidence of "`mstsc.exe`" may indicate that a user attempted to execute RDP&#x20;
+* Evidence of "`rdpclip.exe`" and "`tstheme.exe`" may suggest that the host saw an RDP connection
 
 ***
 
-## &#x20;<mark style="color:purple;">**Separation and the Principles of the Least Privilege**</mark>
+## <mark style="color:$info;">detecting RDP Activity via Event Logs</mark>
+
+When analyzing RDP-related events, it is important to understand that Eboth the source computer (the system initiating the RDP session) and the destination computer (the system being accessed) store logs related to the session
+
+<figure><img src=".gitbook/assets/rdp_event_ids_summary.png" alt=""><figcaption></figcaption></figure>
+
+Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational : This log is particularly valuable because it records all RDP connection attempts, regardless of whether they succeed or fail. That makes it a strong indicator when investigating RDP-related activity.
+
+<figure><img src=".gitbook/assets/5cad07_618afa4faff24b20a5452edd41772b36~mv2.png" alt=""><figcaption></figcaption></figure>
+
+<mark style="color:$warning;">**Event ID 1149**</mark>&#x20;
+
+* This event is generated every time an RDP connection attempt occurs. successful connections, reconnections, and failed attempts alike.&#x20;
+* records the Source IP and username of the connecting host
+* TerminalServices - RemoteConnectionManager (Target system)
+* **Note:** The phrase "User authentication succeeded" in the event description refers to network-level authentication (NLA), not full user logon.
+
+<figure><img src=".gitbook/assets/image2_5.png" alt=""><figcaption></figcaption></figure>
+
+<mark style="color:orange;">**Event ID 4624**</mark>**&#x20; : An account was successfully logged on**
+
+_**`Windows logon types`**_ :&#x20;
+
+<figure><img src=".gitbook/assets/Screenshot (1880).png" alt=""><figcaption></figcaption></figure>
+
+{% embed url="https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=4624" %}
+
+_**`For RDP analysis, we focus on`**_:
+
+* **Logon Type 2:** Interactive (physical logon)
+* **Logon Type 3:** Network logon (used in conjunction with others)
+* **Logon Type 7:** Unlock (session unlock)
+* **Logon Type 10:** Remote interactive (RDP or Terminal Services)
+
+<figure><img src=".gitbook/assets/image2_6.png" alt=""><figcaption></figcaption></figure>
+
+`Logon Type : 10 , 7 , 3`
+
+* Logon Type 10 occurs only when a user connects to a system using RDP and the account is not already logged in&#x20;
+* Example : let’s consider that Anas is already logged in (or her session is locked), and someone connects via RDP using Alice’s credentials. In this case, **Logon Type 7** is recorded. Logon Type 7 indicates a **“Unlock” or reauthentication of an existing session**, rather than a brand-new session.\
+  If a different user establishes a new RDP session, then **Logon Type 10** is recorded
+* If Network Level Authentication (NLA) is enabled, you will typically observe Logon Type 3 followed by either Type 10 (for new sessions) or Type 7 (for reconnections).
+
+<figure><img src=".gitbook/assets/image2_7.png" alt=""><figcaption></figcaption></figure>
+
+Logon Type 3 : provides the source workstation name, which helps identify the origin of the RDP connection
+
+<figure><img src=".gitbook/assets/image2_9.png" alt=""><figcaption></figcaption></figure>
+
+<mark style="color:$warning;">**Event ID : 21 and 22 , 98 " Terminal Service "**</mark>
+
+* **Event ID 21** : Remote Desktop Services: Session logon succeeded
+* **Event ID 22** : Remote Desktop Services: Shell start notification received.
+* These events confirm that the user session has started and a shell (e.g., Windows Explorer GUI)
+* Event ID 98 :Remote Desktop Services - RDP Core TS (Target system) -correlates with the above (131) event ID and will record successful connections.&#x20;
+
+<figure><img src=".gitbook/assets/image2_12.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image2_13.png" alt=""><figcaption></figcaption></figure>
+
+<mark style="color:$warning;">**Event ID : 25 , 4778 "**</mark><mark style="color:$warning;">Terminal Services"</mark> <mark style="color:$warning;"></mark><mark style="color:$warning;">**(Session Reconnect)**</mark>&#x20;
+
+* Remote Desktop Services: Session reconnection succeeded.
+* If a user disconnects an RDP session (by closing the client,..), the session stays active but locked. Reconnecting does not trigger a full new logon. In this case, **Logon Type 7** (unlock) is recorded instead of **Logon Type 10**. As usual, it is preceded by **Logon Type 3** (network logon)
+* Event ID 4778 : enerated when a session is reconnected via Terminal Services&#x20;
+
+<div><figure><img src=".gitbook/assets/image2_16 (1).png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_15.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_14 (1).png" alt=""><figcaption></figcaption></figure></div>
+
+<mark style="color:$warning;">**Event ID : 24 , 29  , 30 (Session Disconnect)**</mark>
+
+* **Event ID 40** : SESSION X has been disconnected. reason code X (This event gives a reason code explaining why the session was disconnected (e.g., user action, timeout, etc.).
+* **Event ID 24** : Session has been disconnected.
+* **Event ID 39** : Session X has been disconnected by Session X ( This shows when one session forces another to disconnect commonly happens if a new RDP login ends an active session )
+* This sequence of events is often followed by Event ID 4634 in the Security event log, which confirms that the account was logged off.
+
+<div><figure><img src=".gitbook/assets/image2_21.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_20.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_19.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_18.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_17.png" alt=""><figcaption></figcaption></figure></div>
+
+#### <mark style="color:$warning;">**Event ID : 23 ,**</mark> <mark style="color:$warning;"></mark><mark style="color:$warning;">4779</mark><mark style="color:$warning;">**"Windows-TerminalServices" , 4634 and 4647 "Security" ( RDP Session LogOff)**</mark>
+
+* **Event ID 23** : Remote Desktop Services: Session logoff succeeded
+* **Event ID 4634** : An account was logged off.
+* **Event ID 4647** : User initiated Logoff.
+* Event ID : 4779 : recorded when a user disconnects from a terminal services session.
+
+<div><figure><img src=".gitbook/assets/image2_24.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_23.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image2_22.png" alt=""><figcaption></figcaption></figure></div>
+
+<mark style="color:$warning;">**Event ID : 4648**</mark>
+
+* known as an “explicit logon” \*These are observed with numerous remote connections, not just RDP
+
+<mark style="color:$warning;">**Event ID : 1102 , 1024 (outbound RDP connections)**</mark>&#x20;
+
+* Terminal Services RDPClient (⇒ Source System)
+* records the target hostname , IP&#x20;
+
+<mark style="color:blue;">**`LAB`**</mark>
+
+we Have "2" Files ( Terminal-Service Logs AND Security Logs of The target Machine ) and we want to identify the first successful RDP logon , What is the internal host from which the attacker laterally moved
+
+From Security Logs We filtered By Even ID : 4624 To list all Login successful and specially look for logon Type : 3 Followed By Logon type : 10 "indicator of RDP Connection is successfully"
+
+<figure><img src=".gitbook/assets/Screenshot (1881).png" alt=""><figcaption></figcaption></figure>
+
+&#x20;the attacker is authenticated via network in "4/22/2025 3:37:18 AM" and he is tried to connect By RDP
+
+<figure><img src=".gitbook/assets/Screenshot (1882).png" alt=""><figcaption></figcaption></figure>
+
+we observed also multiple login failure from the attacker "indicator of Brute-Force"
+
+we can filter by **Event ID 1149 @ terminal-service logs : that record** the Source IP and username of the connecting host
+
+<figure><img src=".gitbook/assets/Screenshot (1883) (1).png" alt=""><figcaption></figcaption></figure>
+
+***
+
+## <mark style="color:purple;">Detecting RDP Activity via Process Execution</mark>
+
+We'll approach this from two perspectives:
+
+* **The Source Machine:** Where the RDP session was initiated.
+* **The Target Machine:** The system that was accessed remotely.
+
+notes :&#x20;
+
+* On the **source system**, RDP clients are usually launched through the _**`GUI`**_, so artifacts like **`UserAssist`** and **`RecentApps`**&#x61;re highly relevant.
+* On the **target system**, RDP sessions are initiated in the background by the OS, not directly by the user. As a result, GUI-based artifacts (e.g., **UserAssist**) won’t appear. Instead, the focus shifts to **`Prefetch`**&#x61;nd other **system-level artifacts**
+* **Source ⇒ UserAssist , RecentApps**
+* **Target ⇒** Prefetch , **Shimcache , Amcache**
+* When they initiate an RDP session, the process “mstsc.exe” is executed. This is the Microsoft Remote Desktop Client, used to connect to and control remote computers or Remote Desktop Session Host (RDSH) servers.
+* We can find process execution evidence of “mstsc.exe” through various artifacts such as:
+  * RecentApps
+  * Prefetch
+  * UserAssist
+  * BAM (Background Activity Moderator)
+
+{% embed url="https://www.cybertriage.com/blog/ntuser-dat-forensics-analysis-2025/" %}
+
+{% embed url="https://www.cybertriage.com/blog/shimcache-and-amcache-forensic-analysis-2025/" %}
+
+{% embed url="https://www.cybertriage.com/blog/userassist-forensics-2025/" %}
+
+{% embed url="https://www.magnetforensics.com/blog/forensic-analysis-of-prefetch-files-in-windows/" %}
 
 \
-**(Separation of Duties)**
+<mark style="color:orange;">**Source Computer**</mark>
 
-* the division of the permissions required to perform a task between people or roles.
-* aims to prevent a single person or role from being able to perform all the tasks and to prevent potential malicious activities
-* For instance, when an individual initiates a task, another person might be required to authorize or finalize it.
+* we will examine UserAssist and BAM artifacts to identify execution of “mstsc.exe”, or its registered name, Microsoft.Windows.RemoteDesktop.
 
-<figure><img src=".gitbook/assets/unnamed.gif" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image3_5.png" alt=""><figcaption></figcaption></figure>
 
+* the attacker initiates an RDP session to the IP address “172.17.79.143”
 
+<figure><img src=".gitbook/assets/image3_1.png" alt=""><figcaption></figcaption></figure>
 
-**The Least Privilege :**&#x20;
+After conducting activity on the remote system we investigate the source system for process execution of “mstsc.exe”.
 
-* simply providing users or roles only the minimum privileges necessary for their duties
-* prevents data breaches and improves network security by limiting the authorization level.
+The “ **UserAssist”** artifact is stored in the user's “NTUSER.DAT” registry hive. Open it with Registry Explorer to examine the path:
 
-<figure><img src=".gitbook/assets/images.jpg" alt=""><figcaption></figcaption></figure>
+```
+Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist
+```
 
-***
+Here we see the program name instead of the exact executable (mstsc.exe). In this case, Microsoft.Windows.RemoteDesktop. (**Run Counter , last executed , Focus Time )** we confirm that the RDP client was last run at: “ **2025-04-07 05:40:30** ”.
 
-## <mark style="color:purple;">Authentication</mark>
+<figure><img src=".gitbook/assets/image3_2.png" alt=""><figcaption></figcaption></figure>
 
-Strong Authentication Methods :&#x20;
+examine the “ **BAM (Background Activity Moderator)** ”, which is stored in the SYSTEM registry hive&#x20;
 
-* Multi-Factor Authentication (MFA)
-* Password Policies and Long, Complex Passwords&#x20;
-* Passwords should be changed periodically, stored securely, and should not be reused.
-* Application of technological authentication methods such as biometric verification or physical devices.
+```
+SYSTEM\bam\State\UserSettings\<USER-SID>
+```
 
-<figure><img src=".gitbook/assets/image6.png" alt=""><figcaption></figcaption></figure>
+The BAM entry also shows “mstsc.exe” and a matching timestamp, reinforcing the finding from “UserAssist”.
 
-***
+<div><figure><img src=".gitbook/assets/image3_4.png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/image3_3.png" alt=""><figcaption></figcaption></figure></div>
 
-## <mark style="color:purple;">Session Management</mark>
+#### <mark style="color:$warning;">Target System</mark>
 
-Users' access should be granted for the required time period and the session should be terminated automatically. This measure safeguards against unauthorized access and mitigates the risk of session hijacking
+we look for execution of the following RDP-related processes:
 
-implement control mechanisms :&#x20;
+* rdpclip.exe – Manages clipboard redirection during RDP sessions.
+* tstheme.exe – Handles remote desktop theming.
 
-**1. Starting a Session:** The session should start according to the conditions specified in the RBAC and/or ABAC part .
+These processes are spawned by the system, not manually executed by a user. Therefore, artifacts like “UserAssist” or “RecentDocs” will not contain evidence of their activity.Instead, we turn to the prefetch artifact.\
+**Note:** Windows Server often has prefetch disabled by default, in which case we can use other artifacts like “Shimcache” or “Amcache”. In this example, we use Prefetch.
 
-**2. Maintaining a Session:** The session should persist under the same conditions in which it was initiated.
+<figure><img src=".gitbook/assets/image3_8.png" alt=""><figcaption></figcaption></figure>
 
-**3. Session Monitoring:** During the session period, there should be no activity other than the scheduled permissions and privileges.
+To parse prefetch data, we use PECmd by Eric Zimmerman.This command parses all prefetch files located at “C:\Windows\Prefetch” and exports the results to “targetsystem.csv”.
 
-**4. Session Termination:** The session must be terminated properly.\
+```
+PECmd.exe -d "C:\Windows\Prefetch\" --csvf targetsystem.csv --csv .
+```
 
+We find evidence of “TSTHEME.exe” in prefetch.
 
-Authorization and session managements are key elements of access control and are critical for a secure network infrastructure.
+<figure><img src=".gitbook/assets/image3_7.png" alt=""><figcaption></figcaption></figure>
 
-***
+Note the last run timestamp is: **2025-04-07 05:42:22** This matches the expected timeline. The RDP session was initiated at 05:40:30 (from the source), and the connection was fully established by around 05:40:38. The later timestamp likely reflects the end of the session.\
+The 7-second gap between source and target logs is normal and represents the time it took to establish the session.
 
-## <mark style="color:purple;">Static and Dynamic Data</mark>
+_**`Lab`**_&#x20;
 
-* **Static (stationary) data:** Static data, as its name suggests, remains stationary; it is stored somewhere, awaiting utilization. Examples include data on disks, etc. All forms of data residing in these kinds of environments fall within this category.
-* **Dynamic data:** Dynamic data, as the name implies, is data that moves from one place to another. \[ This can also be a file downloaded to your system from an internet source ] \
+we need to answer this questions :&#x20;
 
+* When did the threat actor initially start their RDP session from the source system after the brute-force attack?
+* Based on the UserAssist artifact from the source system, when was the Microsoft Remote Desktop app last executed?
+* According to the UserAssist data from the source system, what was the total focus time for the Microsoft Remote Desktop app?
+* Analyze the artifacts of the target system. When was the RDP clipboard-related process executed for the first time on the incident date on the target system?
+* What is the latest execution timestamp for “tstheme.exe” on the target system?
 
-When the data is stored on the server (**static data**), it is protected using measures like network segmentation, RBAC, strong password policies, and multi-factor authentication. However, once the data is transferred between two locations (**dynamic data**), it travels through systems we cannot control. The only reliable way to secure it in transit is through **encryption**, ensuring that only the sender and the intended recipient can interpret it.
+lets practice
 
-* **Static Data** → protected with access controls and permissions.
-* **Dynamic Data** → protected with encryption during transmission.
+from previous investigation we identified the attacker has successful loin "4/22/2025 3:37:18 AM" so all events approximately after this time slightly&#x20;
 
-<figure><img src=".gitbook/assets/sni2.png" alt=""><figcaption></figcaption></figure>
+We'll check **UserAssist**, but that's not proof this was the attacker's _first_ RDP session after the brute-force  the attacker could have disconnected and reconnected. **UserAssist** only shows the _last_ time an item was executed.
 
-### Protection of Dynamic Data
+<div><figure><img src=".gitbook/assets/Screenshot (1885).png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/Screenshot (1886).png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/Screenshot (1887).png" alt=""><figcaption></figcaption></figure></div>
 
-* **Data Encryption**
-* **Secure Data Communication \[** SSL/TLS protocols can be used , verification ]&#x20;
+from user assist ⇒ last executed : 03:51:44&#x20;
 
-<figure><img src=".gitbook/assets/image8.png" alt=""><figcaption></figcaption></figure>
+From BAM : execution time of mstsc : 03:56:08 ( there is a gap between them )&#x20;
 
-* make sure that the data is transferred and verified securely.
-* not storing data unnecessarily.
-* Data should be stored as long as necessary and should be purged regularly to reduce the risk of unnecessary retention
-* the data must be stored securely for the duration of the retention period and access to the data must be restricted
-* Data flow and sharing should be monitored, and unauthorized access attempts or data breaches should be detected.
+<div><figure><img src=".gitbook/assets/Screenshot (1888).png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/Screenshot (1889).png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/Screenshot (1890).png" alt=""><figcaption></figcaption></figure></div>
 
-\
-Protection of Static Data&#x20;
+Let's analyze the **Prefetch** files on the source machine, list every time **mstsc.exe** was executed, and take the earliest timestamp after 4/22/2025 3:37:18 AM" that earliest run likely corresponds to the initial RDP connection.
 
-* **Data Encryption**
-* **Access Controls \[** Defining user roles, permissions, and data restrictions ensures that only legitimate users have access to data ]&#x20;
-* **Data Backup and Recovery**
-* Storage areas for static data should be secured with a combination of physical and electronic security measures
-* Physical security includes measurements like secure data centers or server rooms, access controls, security cameras, and alarm systems. On the other hand, electronic measurements include strong encryption, firewalls, security tools, and intrusion detection systems.
-* **Security Monitoring and Incident Response**
-* **Data Deletion and Destruction**
+<div><figure><img src=".gitbook/assets/Screenshot (1893).png" alt=""><figcaption></figcaption></figure> <figure><img src=".gitbook/assets/Screenshot (1894).png" alt=""><figcaption></figcaption></figure></div>
 
-***
+the threat actor initially start their RDP session : 03:37:46 which a mstsc.exe was installed after login successfully
 
-## &#x20;<mark style="color:purple;">Authorization Methods</mark>
+from the target prefetch file :&#x20;
 
-Authorization, which is performed after the authentication process, allows the users to determine the level of access to certain resources
+* RDPCLIP.exe was created : 03:38:17 on the target machine
 
-Commonly used authorization approaches : \
-1- **Role-Based Authorization**\
-**2- Policy-Based Authorization**\
-**3- Permission-Based Authorization**
+<figure><img src=".gitbook/assets/Screenshot (1891).png" alt=""><figcaption></figcaption></figure>
 
-\
-**Role-Based Authorization :**
+time line :&#x20;
 
-* Users gain access to certain resources in the system depending on their role.
-* For example, users with an "Administrator" role can access all functions of the system, while users with a "User" role may be subject to certain restrictions
-
-<figure><img src=".gitbook/assets/ab0d45a55f0c41a243093fb57d460fc366fed9ab-6336x3952.png" alt=""><figcaption></figcaption></figure>
-
-\
-**Policy-Based Authorization :**&#x20;
-
-* includes policy rules that determine users' access rights.&#x20;
-* For example, a policy rule may specify whether a particular user can access or not access a particular resource in a particular time zone.
-
-<figure><img src=".gitbook/assets/1751553018993.jpg" alt=""><figcaption></figcaption></figure>
-
-
-
-**Permission-Based Authorization :**&#x20;
-
-* Users are given permissions to access certain resources or perform certain actions.
-* &#x20;For example, a user is given specific permissions to read, write, or delete a file.
-* For example, user is included in an organization's guest network. After this process, the user is only authorized to read the files shared on the network\
-
-
-technologies and standards exist to support and implement the Authentication and Authorization processes :&#x20;
-
-* **LDAP (Lightweight Directory Access Protocol):** is a communication protocol used to retrieve user credentials from databases. It supports directory-based services used in the authentication and authorization processes of users.
-* **Single Sign-On (SSO):** allows users to access multiple applications with a single authentication. Users authenticate once and then automatically gain access to other applications.
-
-<figure><img src=".gitbook/assets/auth3.png" alt=""><figcaption></figcaption></figure>
-
-* Kerberos is a protocol used to provide secure authentication on a network. It is especially used in Windows-based systems and Active Directory environments
-* **SAML (Security Assertion Markup Language):** is an XML-based standard used for authentication and authorization. Provides federation-based authentication where users are authenticated with a security statement provided by the identity provider to access a service
-
-<figure><img src=".gitbook/assets/676ffeb1fa353f97be8f0246_61cc7d5ff16cb02316b7d847_SAML_20work.png" alt=""><figcaption></figcaption></figure>
-
-* **RADIUS (Remote Authentication Dial-In User Service):** is a network protocol used for user authentication and authorization in remote access services. It is mainly used in network access points.
-
-<figure><img src=".gitbook/assets/RADIUS-Authentication-Process.png" alt=""><figcaption></figcaption></figure>
-
-* OAuth : is an authorization protocol that allows users to be authorized to access a service. Used to control access to credentials of third-party applications.
-
-<figure><img src=".gitbook/assets/everything-you-need-to-know-about-oauth-4.png" alt=""><figcaption></figcaption></figure>
-
-* OpenID Connect is a standard that combines authentication and authorization processes based on the OAuth 2.0 protocol. It provides secure authentication of users through identity providers.
-* **JWT (JSON Web Token):** JWT is an authentication mechanism used in web applications. It encrypts and securely transports user information in JSON format. These tokens enable secure sharing of authentication information
-
-{% embed url="https://medium.com/@anas.abdo990088/jwt-from-a-blue-team-perspective-5f9f3d05c9b3" %}
-
-{% embed url="https://medium.com/@anas.abdo990088/secrets-lab-blue-team-labs-online-7e7af65ea593" %}
+* 3:37:18 ⇒ login successfully&#x20;
+* 03:37:46 ⇒ mstsc.exe ( source )
+* 03:38:17 ⇒ RDPCLIP.exe ( target )
 
 ***
 
-## &#x20;Password Management
+## <mark style="color:purple;">**Detecting RDP Activity via Registry**</mark>
 
-A strong and effective password management strategy is an essential step in ensuring the security of information, accounts, and systems.&#x20;
+We will focus on the Remote Desktop Connection MRU (Most Recently Used) artifact, located in the following registry path:
 
-Password Creation Policies :&#x20;
+```
+NTUSER\Software\Microsoft\Terminal Server Client\Servers
+```
 
-* Regularly changing password
-* storing passwords securely
-* creating strong passwords
-* two-factor authentication
-* use unique passwords for each account
-* **Automatic Password Generation Tools**
+This artifact is only available when the connection is made using the default Windows RDP client: “Microsoft Remote Desktop Connection (RDC)”
 
-should include the basic principles of creating strong and secure passwords. Password generation principles basically consist of important items such as length, complexity, uniqueness, unpredictability, regular password updates, using automatic password generation tools, etc.
+Under the default key, you'll find entries beginning with “MRU” followed by a number (e.g., MRU0, MRU1). These entries represent a list of RDP connections in the order they were made.
 
-**Length:** It is important that passwords are too long to guess easily. It is generally recommended to be at least 12 characters long. Longer passwords provide more robust protection.
+* **“MRU0”** is the most recent connection,
+* Subsequent numbers represent older connections.
 
-**Frequency of Updates :** How often passwords should be updated often depends on policies set by the organization. The recommended period is usually 90 days. However, in some cases, this period may be shorter or longer.
+<figure><img src=".gitbook/assets/image4_2.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/pass1.jpeg" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image4_3.png" alt=""><figcaption></figcaption></figure>
 
-The following section is used to set a password policy on Windows.
+If you click on the “Terminal Server Client” root key, you’ll see a summary of RDP connection history. This includes:
 
-<figure><img src=".gitbook/assets/image4-1.png" alt=""><figcaption></figcaption></figure>
+* The `hostname` or IP address
+* The user account used to initiate the connection
+* The last write timestamp of the key
 
-The following file is used to set a password policy on Linux:
+<figure><img src=".gitbook/assets/image4_4.png" alt=""><figcaption></figcaption></figure>
 
-<figure><img src=".gitbook/assets/image4-2.png" alt=""><figcaption></figcaption></figure>
+`LAB`&#x20;
 
-login.defs : the name of the file used to set the password policy on Linux
+* What is the full name of the compromised account used for lateral movement?
+* What is the hostname of the system to which the attacker moved?
+* According to the “Terminal Server Client” registry key, when was the first connection attempt to the system made?
 
-the password policy you’re looking for (like **minimum numbers required in a password**) is usually defined in one of these files, not in the `/etc/pam.d/` folder itself.
+from ⇒ ntuser.dat&#x20;
 
-* `/etc/pam.d/passwd` → runs when you change a password.
-* `/etc/pam.d/sshd` → rules for SSH logins.
-* `/etc/pam.d/system-auth` (RedHat/CentOS) or `/etc/pam.d/common-password` (Ubuntu/Debian) → global rules for password policies.
+<figure><img src=".gitbook/assets/Screenshot (1895).png" alt=""><figcaption></figcaption></figure>
 
-`/etc/pam.d/`   VS     `/etc/pam.d/`
+<figure><img src=".gitbook/assets/Screenshot (1896).png" alt=""><figcaption></figcaption></figure>
 
-#### `/etc/pam.d/`
+<figure><img src=".gitbook/assets/Screenshot (1897).png" alt=""><figcaption></figcaption></figure>
 
-* This is a **directory** that contains configuration files for **PAM (Pluggable Authentication Modules)**.
-* PAM enforces complex password policies (like minimum number of digits, uppercase letters, minimum length, retries, etc.).
+***
 
-#### `/etc/login.defs`
+## Detecting RDP Activity via Bitmap Cache
 
-* This is a **single configuration file** that controls more general user account settings.
-* It does **not** control password complexity (like digits or uppercase letters)
-*   Examples of directives inside:
+* **Bitmap caches in RDP** are used to improve performance by avoiding the need to resend the same graphics repeatedly. The cache stores small image fragments (bitmaps) on both the client and server.
+* Each cache has a fixed **tile size** the maximum dimensions for a single stored bitmap. If an image is larger than this size, it cannot fit into one cache entry. In that case, the server applies a **tiling algorithm**, which breaks the larger image into smaller tiles that do fit.&#x20;
+* These tiles are then stored separately in the cache and reassembled by the client when displaying the screen.
+* In simpler terms, this caching mechanism helps improve the performance of RDP sessions by storing frequently used graphical elements. Bitmap cache files are located at:
 
-    * **PASS\_MAX\_DAYS** → maximum days a password is valid.
-    * **PASS\_MIN\_DAYS** → minimum days before a password can be changed again.
-    * **PASS\_WARN\_AGE** → how many days before expiration a warning is shown.
-    * **UID\_MIN / UID\_MAX** → range of user IDs for regular users.
+```
+Bitmap Cache : C:\Users\[Username]\AppData\Local\Microsoft\Terminal Server Client\Cache\
+```
 
-    &#x20;
+In this example, we observe three cache files with numerical suffixes like “00”, “01”, and “02”. These represent different RDP sessions, with the highest number (e.g., “02”) typically being the most recent.
 
-**Summary:**
+<figure><img src=".gitbook/assets/image5_1 (1).png" alt=""><figcaption></figcaption></figure>
 
-* `/etc/pam.d/` → handles **password strength and quality rules**.
-* `/etc/login.defs` → handles **password aging and user account defaults**.
+#### Parsing Cache to Extract Bitmap Images
 
-\
-Password Sharing and Communication :&#x20;
+The cache files by themselves aren't very readable. To extract usable images from them, we can use a tool called [BMC-TOOLS](https://github.com/ANSSI-FR/bmc-tools) , available on GitHub. This tool converts raw bitmap cache data into actual imag
 
-* When passwords need to be shared, secure methods should be used. Sending passwords via email, instant messaging, or plain text are totally risky. Instead, it is important to use secure encryption protocols. For example, tools such as PGP (Pretty Good Privacy) can be used to send passwords encrypted. It is also a preferred method to securely share passwords face-to-face or with people you trust. This reduces the risk of the password being compromised by unauthorized persons.
-* It is important to use secure communication tools such as encrypted messaging apps or virtual private networks (VPN).
+<figure><img src=".gitbook/assets/image5_2.png" alt=""><figcaption></figcaption></figure>
+
+```
+python3 bmc-tools.py -s "C:\Users\LetsDefend\AppData\Local\Microsoft\Terminal Server Client\Cache" -d "C:\Users\LetsDefend\Downloads\bitmap_parsed_LetsDefend" -b
+
+//  -b : Creates a collage of the extracted bitmaps for easier review. 
+```
+
+Since we're primarily interested in the most recent RDP session, we will focus only on images extracted from the “Cache0002” file.
+
+<figure><img src=".gitbook/assets/image5_5.png" alt=""><figcaption></figcaption></figure>
+
+### Analyzing the Bitmap Images
+
+Now that we have extracted hundreds of bitmap images from the cache files, we need to analyze them to understand what happened during the RDP session. These individual image tiles are often fragmented and not meaningful on their own. To help reconstruct them into readable screenshots, we will use a powerful tool called [RDP Cache Sticher](https://github.com/BSI-Bund/RdpCacheStitcher)&#x20;
+
+Before using the tool, let’s briefly review the collage image generated during extraction. This provides a rough overview by combining all tiles into a single large image.
+
+<figure><img src=".gitbook/assets/image5_6.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image5_7.png" alt=""><figcaption></figcaption></figure>
+
+we notice suspicious activity: Microsoft Defender is visible, along with a GitHub repository for a post-exploitation tool called “ **SeatBelt** ”.
+
+**`RDP Cache Stitcher`** :&#x20;
+
+* To further enhance the visibility of the session, we use a tool called “RDP Cache Stitcher”.
+* Once loaded, you’ll see stitched images that provide a much clearer view of the RDP session activity. Although the order may not be perfect, the accuracy is quite high (around 90%).
+
+<figure><img src=".gitbook/assets/image5_11.png" alt=""><figcaption></figcaption></figure>
+
+From the reconstructed images, we can draw several conclusions about the session:
+
+* The user opened “ **Microsoft Edge** ” and visited the “ **GhostPack** ” GitHub repository.
+* The specific “ **SeatBelt** ” repository was accessed and the binary was downloaded.
+* **“Windows Defender** ” initially blocked the binary.
+*   Afterward, the user disabled Windows Defender and re-downloaded the tool successfully.
+
+    There is also PowerShell activity, a ping to the letsdefend domain.
+
+<figure><img src=".gitbook/assets/image5_13.png" alt=""><figcaption></figcaption></figure>
 
 
 
-### Credential Harvesting Methods :&#x20;
 
-* **Phishing**
-* **Keylogger**
-* **Brute Force Attacks**
-* **Dictionary Attack**
-* **Social Engineering**
 
-### Precautions Against Password Threats 
 
-* It is important to use strong and complex passwords.&#x20;
-* It is important to change passwords regularly.&#x20;
-* Using multi-factor authentication increases security.
-* Using secure internet connections reduces the risk of passwords being stolen.
-* &#x20;Risky connections such as public networks or unsafe Wi-Fi hotspots should be avoided.
-* Using reliable and up-to-date anti-virus software prevents password theft attacks&#x20;
+
+
+
+
+
+
+
+
+
+
 
 
 
