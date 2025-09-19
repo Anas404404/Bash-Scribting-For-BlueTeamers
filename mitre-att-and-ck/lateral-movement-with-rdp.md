@@ -4,11 +4,9 @@
 
 ### **Introduction**
 
-
-
 What is RDP : Remote Desktop Protocol is a protocol that runs over port ‘3389’ and allows you to connect from one system to another over a remote connection , It provides full GUI control of remote systems
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/0_Cwo4GydsjtUrsFtH.jpg)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/0_Cwo4GydsjtUrsFtH.jpg)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/0_Cwo4GydsjtUrsFtH.jpg" alt=""><figcaption></figcaption></figure>
 
 **How do I enable Remote Desktop?**
 
@@ -43,32 +41,24 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnec
 netsh advfirewall firewall set rule group="remote desktop" new enable=No
 ```
 
-\ Common RDP Lateral Movement Techniques
+⇒ Common RDP Lateral Movement Techniques
 
-*   **Credential Theft and Reuse :**
+* **Credential Theft and Reuse :Attackers employ multiple methods to harvest credentials:**\
+  **1- LSASS Memory Extraction: Mimikatz recover plaintext passwords from system memory**\
+  &#x20;**2- Keystroke Logging: Capturing credentials during legitimate authentication.** \
+  **3- Credential Cache Attacks: Exploiting Windows' credential storage mechanisms.**\
 
+* **RDP Session Hijacking :**
 
+attackers may hijack existing RDP sessions. This technique involves the following steps :\
+1- Identifying active RDP sessions on a compromised system
 
-**Attackers employ multiple methods to harvest credentials:**
+2- Elevating privileges to the SYSTEM level
 
+3- Taking control of the session token
 
+4- Redirecting the session to the attacker's client
 
-**1- LSASS Memory Extraction: Mimikatz recover plaintext passwords from system memory 2- Keystroke Logging: Capturing credentials during legitimate authentication. 3- Credential Cache Attacks: Exploiting Windows' credential storage mechanisms.**
-
-
-
-**RDP Session Hijacking :**
-
-
-
-*   attackers may hijack existing RDP sessions. This technique involves the following steps :\
-    1- Identifying active RDP sessions on a compromised system
-
-    2- Elevating privileges to the SYSTEM level
-
-    3- Taking control of the session token
-
-    4- Redirecting the session to the attacker's client
 * A common tactic is Pass-the-Hash (PtH), where attackers use captured NTLM hashes to authenticate to systems without needing to crack the password.Once credentials are obtained, attackers use standard RDP clients to connect to other systems where the credentials are valid.
 *   **Exploiting RDP Vulnerabilities : The most infamous example is BlueKeep (CVE-2019-0708), a remote code execution vulnerability that affects older Windows systems , vulnerabilities like DejaBlue allow attackers to move between systems by exploiting RDP security flaws**
 
@@ -102,7 +92,7 @@ Notes
 
 When analyzing RDP-related events, it is important to understand that Eboth the source computer (the system initiating the RDP session) and the destination computer (the system being accessed) store logs related to the session
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/rdp_event_ids_summary.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/rdp_event_ids_summary.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/rdp_event_ids_summary.png" alt=""><figcaption></figcaption></figure>
 
 Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational : This log is particularly valuable because it records all RDP connection attempts, regardless of whether they succeed or fail. That makes it a strong indicator when investigating RDP-related activity.
 
@@ -449,21 +439,30 @@ From the reconstructed images, we can draw several conclusions about the session
 
 ### _**`LAB`**_
 
+* What tool did the attacker download to harvest credentials?
+* What tool did the attacker use for network reconnaissance?
+* What is the name of the TXT file created by the attacker to store results from the tool?
+* how many hosts were powered on at the time?
+* What was the likely name of the archive created by the attacker
+* Which free file transfer web service did the attacker use to exfiltrate data?
 
+<figure><img src="../.gitbook/assets/Screenshot (1904).png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot (1905).png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot (1906).png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot (1907).png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot (1908).png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot (1915).png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot (1916).png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot (1917).png" alt=""><figcaption></figcaption></figure>
 
-
-
-
-
-
-
+***
 
 
 
