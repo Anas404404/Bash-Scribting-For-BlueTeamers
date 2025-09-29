@@ -180,15 +180,145 @@ rpcping -s 127.0.0.1 -e 1234 -a privacy -u NTLM 1>$Null
 [!!!!!!!!END TEST!!!!!!!]
 ```
 
-The output captured every sub-technique and extracted information about each, as you can see.
+**The output captured every sub-technique and extracted information about each, as you can see.**
 
 ***
 
-## <mark style="color:purple;">Checking Prerequisites</mark>
+## <mark style="color:purple;">Check or Get Prerequisites for Atomic Tests</mark>
 
+**Each tactic’s `.yaml` file in Atomic Red Team includes a Description section that lists required preconditions (prerequisites): required binaries, privileges, services, or configuration changes needed for the atomic test to run correctly.**
 
+<figure><img src="../.gitbook/assets/Screenshot 2025-09-29 at 20-12-51 atomic-red-team_atomics at master · redcanaryco_atomic-red-team.png" alt=""><figcaption></figcaption></figure>
 
+<figure><img src="../.gitbook/assets/Screenshot 2025-09-29 at 20-13-16 atomic-red-team_atomics_T1003 at master · redcanaryco_atomic-red-team.png" alt=""><figcaption></figcaption></figure>
 
+* **Before executing a test use the provided prerequisite-check command (or the test’s built-in check). The check reads the `.yaml` description and verifies those conditions on the host.**
+* **If the check returns `met` it means the prerequisites are satisfied and the test can be executed safely (environment, permissions, and dependencies are present).**
+* **If the check returns not met / missing (or lists specific failures), do not run the test — instead install or enable the missing items (e.g., run as Administrator, install required tools, enable services, or adjust configuration) and re-run the check.**
+
+<figure><img src="../.gitbook/assets/Screenshot 2025-09-29 at 20-14-31 atomic-red-team_atomics_T1003_T1003.yaml at master · redcanaryco_atomic-red-team.png" alt=""><figcaption></figcaption></figure>
+
+To check if the system you are using meets the prerequisites required for each test, use the `-CheckPrereqs` switch before executing the test.
+
+```
+// By TestName
+Invoke-AtomicTest T1003 -TestName "Credential Dumping with NPPSpy" -CheckPrereqs
+
+// By TestNumber
+Invoke-AtomicTest T1003 -TestNumber 2 -CheckPrereqs
+
+// By GUID
+Invoke-AtomicTest T1003 -TestGuids 9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6  -CheckPrereqs
+```
+
+Example : check Prereqs for Credential Dumping with NPPSpy (3-ways)
+
+<figure><img src="../.gitbook/assets/Screenshot (2181).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2182).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2183).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2184).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2185).png" alt=""><figcaption></figcaption></figure>
+
+To check the prerequisites for all atomic tests within a given technique number you can use the following command
+
+```
+Invoke-AtomicTest T1003 -CheckPrereqs
+```
+
+<figure><img src="../.gitbook/assets/Screenshot (2186).png" alt=""><figcaption></figcaption></figure>
+
+If you find that your system does not meet the prerequisites, you can use the `-GetPrereqs` switch to attempt to satisfy those prerequisites as follows.
+
+```
+Invoke-AtomicTest T1003 -TestName "Credential Dumping with NPPSpy" -GetPrereqs
+```
+
+<figure><img src="../.gitbook/assets/Screenshot (2187).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2188).png" alt=""><figcaption></figcaption></figure>
+
+***
+
+## <mark style="color:purple;">**Execute Atomic Tests (Local)**</mark>
+
+When you run an atomic test locally, the runner doesn't guess it reads the `executor` section inside the test’s `.yaml` and follows it exactly. The `executor` defines **how** to run the test: the command or script, target platform (Windows/Linux/macOS), required privileges (e.g., admin/root), timeout, and any variables or arguments.
+
+<figure><img src="../.gitbook/assets/Screenshot 2025-09-29 at 23-26-24 atomic-red-team_atomics_T1218_T1218.yaml at master · redcanaryco_atomic-red-team.png" alt=""><figcaption></figcaption></figure>
+
+**Execute Specific Attacks (by Atomic Test Number) for a Given Technique**
+
+```
+Execute Single Test 
+
+// By num
+Invoke-AtomicTest T1218.010 -TestNumbers 1
+
+// By Name 
+Invoke-AtomicTest T1218.010 -TestNames "Regsvr32 remote COM scriptlet execution"
+
+// By GUID
+Invoke-AtomicTest T1003 -TestGuids 5c2571d0-1572-416d-9676-812e64ca9f44
+-----------------------------------------------
+Execute Pair Tests
+
+ // By Num 
+Invoke-AtomicTest T1218.010 -TestNumbers 1,2
+# or using the short form ..
+Invoke-AtomicTest T1218.010-1,2
+
+// By Name
+Invoke-AtomicTest T1218.010 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
+
+// By GUID
+Invoke-AtomicTest T1003 -TestGuids 5c2571d0-1572-416d-9676-812e64ca9f44,66fb0bc1-3c3f-47e9-a298-550ecfefacbc
+---------------------------------------------------
+Execute All Attacks for a Given Technique
+
+Invoke-AtomicTest T1218.010
+---------------------------------------------------
+Execute All Tests
+
+Invoke-AtomicTest All
+---------------------------------------------------
+```
+
+Example ⇒ T1218.010
+
+<figure><img src="../.gitbook/assets/Screenshot 2025-09-29 at 23-34-49 System Binary Proxy Execution Regsvr32 Sub-technique T1218.010 - Enterprise MITRE ATT&#x26;CK®.png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2190).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2191).png" alt=""><figcaption></figcaption></figure>
+
+for T1218.010 Test #1 the executor launches Calculator expected result: **calc opens** on the target machine. If calc doesn’t open, inspect the executor, permissions, and any blocked binaries.
+
+<figure><img src="../.gitbook/assets/Screenshot (2193).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src="../.gitbook/assets/Screenshot (2194).png" alt=""><figcaption></figcaption></figure>
+
+{% embed url="https://attack.mitre.org/techniques/T1218/010/" %}
+
+***
+
+## <mark style="color:purple;">Specify Custom Input Arguments</mark>
+
+<figure><img src="../.gitbook/assets/Screenshot (2195).png" alt=""><figcaption></figcaption></figure>
+
+Use the `-PromptForInputArgs` switch to set your own values for the input arguments used by the atomic test
+
+```
+Invoke-AtomicTest T1564.004 -TestNames "Create ADS command prompt" -PromptForInputArgs
+```
+
+Specify InputArg "chrome.exe"
+
+<figure><img src="../.gitbook/assets/Screenshot (2196).png" alt=""><figcaption></figcaption></figure>
+
+***
 
 
 
