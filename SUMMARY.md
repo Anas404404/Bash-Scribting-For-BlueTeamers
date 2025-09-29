@@ -15,3 +15,7 @@
 ## MITRE ATT\&CK
 
 * [Lateral Movement With RDP](mitre-att-and-ck/lateral-movement-with-rdp.md)
+
+## Threat Emulation
+
+* [Atomic RedTeam](threat-emulation/atomic-redteam.md)
