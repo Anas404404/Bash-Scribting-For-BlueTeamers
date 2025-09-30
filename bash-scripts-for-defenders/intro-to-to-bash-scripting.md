@@ -1,6 +1,6 @@
 # Intro To to Bash Scripting
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/1_GugKOJXJTFqpag3HwtdsJw.jpg)](../.gitbook/assets/1_GugKOJXJTFqpag3HwtdsJw.jpg)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/1_GugKOJXJTFqpag3HwtdsJw.jpg" alt=""><figcaption></figcaption></figure>
 
 ### Concepts
 
@@ -35,19 +35,19 @@ wsl --install
 
 2- access the Linux environment by locating the Ubuntu application from the Start menu and running it
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash50.png)](../.gitbook/assets/bash50.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash50.png" alt=""><figcaption></figcaption></figure>
 
 3- If everything went well , it will ask us to define a username and pass before it starts the bash console.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash52.png)](../.gitbook/assets/bash52.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash52.png" alt=""><figcaption></figcaption></figure>
 
 4- . Ubuntu WSL runs on its own virtual file system. It mounts the file systems of your Windows under the /mnt/ directory. So, if you want to view the files and directories on the C:/ disk of your Windows system, run the ls /mnt/c command.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash53.png)](../.gitbook/assets/bash53.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash53.png" alt=""><figcaption></figcaption></figure>
 
 5- On Windows, to access your home directory in Ubuntu WSL environment, you should use “ **explorer.exe .** ”
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash54.png)](../.gitbook/assets/bash54.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash54.png" alt=""><figcaption></figcaption></figure>
 
 Cygwin :
 
@@ -60,23 +60,23 @@ install Cygwin :
 
 * Download and Run : setup-x86\_64.exe (for 64-bit systems) from the Cygwin website ( [https://www.cygwin.com](https://www.cygwin.com) ).
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash55.png)](../.gitbook/assets/bash55.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash55.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash56.png)](../.gitbook/assets/bash56.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash56.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash57.png)](../.gitbook/assets/bash57.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash57.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash58.png)](../.gitbook/assets/bash58.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash58.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash59.png)](../.gitbook/assets/bash59.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash59.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash60.png)](../.gitbook/assets/bash60.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash60.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash61.png)](../.gitbook/assets/bash61.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash61.png" alt=""><figcaption></figcaption></figure>
 
 you can access your shell by clicking one of the **Cygwin64 Terminal** icons placed on your desktop and start menu.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash62.png)](../.gitbook/assets/bash62.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash62.png" alt=""><figcaption></figcaption></figure>
 
 ***
 
@@ -115,7 +115,7 @@ chmod +x hello_word.sh
   To use the value of a variable, we put a dollar sign (`$`) in front of the variable name\
   Note that this definition is valid throughout the console session we are working on
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash1.png)](../.gitbook/assets/bash1.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash1.png" alt=""><figcaption></figcaption></figure>
 
 To create or modify an environmental variable, we use the `export` command:
 
@@ -131,25 +131,17 @@ To read an environmental variable, we put a dollar sign (`$`) like a regular var
 echo $PATH
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash2.png)](../.gitbook/assets/bash2.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash2.png" alt=""><figcaption></figcaption></figure>
 
 env : view current environmental variables\\
 
-*   #### “if-else-if” Structure
-
-
+* #### “if-else-if” Structure
 
 #### <sub>For example, in this example, it asks the user to enter a number, assigns the user-entered value to a variable, and then checks whether the value of this variable:</sub>
 
-
-
 #### <sub>is greater than 10,</sub>
 
-
-
-#### <sub>is equal to 10,</sub>
-
-
+#### <sub>is equal to 10</sub>
 
 #### <sub>s less than 10</sub>
 
