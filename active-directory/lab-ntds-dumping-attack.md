@@ -4,7 +4,7 @@ description: >-
   علمتنا وقنا عذاب النار
 ---
 
-# LAB : NTDS dumping attack
+# LAB 1 : NTDS dumping attack
 
 <figure><img src="../.gitbook/assets/Screenshot 2025-10-05 at 13-13-52 .png" alt=""><figcaption></figcaption></figure>
 
