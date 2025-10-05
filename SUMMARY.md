@@ -23,4 +23,5 @@
 ## Active Directory
 
 * [NTDS dumping attack](active-directory/ntds-dumping-attack.md)
-* [LAB : NTDS dumping attack](active-directory/lab-ntds-dumping-attack.md)
+* [LAB 1 : NTDS dumping attack](active-directory/lab-1-ntds-dumping-attack.md)
+* [LAB 2 : NTDS dumping attack](active-directory/lab-2-ntds-dumping-attack.md)
