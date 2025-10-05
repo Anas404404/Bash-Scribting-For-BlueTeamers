@@ -19,3 +19,7 @@
 ## Threat Emulation
 
 * [Atomic RedTeam](threat-emulation/atomic-redteam.md)
+
+## Active Directory
+
+* [NTDS dumping attack](active-directory/ntds-dumping-attack.md)
