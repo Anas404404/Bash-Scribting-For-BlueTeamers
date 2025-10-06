@@ -6,9 +6,7 @@ description: >-
 
 # LAB 2 : NTDS dumping attack
 
-<figure><img src="broken-reference" alt=""><figcaption></figcaption></figure>
-
-***
+<figure><img src="../.gitbook/assets/Screenshot 2025-10-06 at 11-03-35 .png" alt=""><figcaption></figcaption></figure>
 
 Sherlock link :&#x20;
 
