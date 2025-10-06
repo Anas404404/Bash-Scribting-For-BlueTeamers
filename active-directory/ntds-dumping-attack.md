@@ -81,6 +81,8 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NTDS\Parameters
 
 ## <mark style="color:purple;">**Detection**</mark> <a href="#mcetoc_1i6eoeekd77" id="mcetoc_1i6eoeekd77"></a>
 
+<figure><img src="../.gitbook/assets/ChatGPT Image Oct 6, 2025, 11_15_32 AM.png" alt=""><figcaption></figcaption></figure>
+
 **`Event ID 325 and 327`**
 
 * **from Application, system & security logs**&#x20;
@@ -142,3 +144,4 @@ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NTDS\Parameters
     **(sourcetype=WinEventLog:Security EventCode IN (4656, 4663)) OR (sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode="11") ANDObjectType="File" AND TargetFilename="\*ntds.dit" AND (AccessList="%%4416" OR AccessList="%%4419" OR AccessList="%%4417" OR AccessList="%%4424")**
 
 ***
+
