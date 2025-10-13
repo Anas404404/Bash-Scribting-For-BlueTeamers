@@ -503,7 +503,7 @@ extractUserAgents() {
 extractUserAgents
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash32.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash32.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash32.png" alt=""><figcaption></figcaption></figure>
 
 we want to find e-mail addresses in a text file, check for validity and generate a report
 
