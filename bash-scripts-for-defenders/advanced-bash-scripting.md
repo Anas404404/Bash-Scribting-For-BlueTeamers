@@ -85,7 +85,7 @@ done
 
 In this example, we are checking three separate options using the -a, -b, and -c flags.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash24.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash24.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash24.png" alt=""><figcaption></figcaption></figure>
 
 In the example below, the user is allowed to use either "-o" or "--option" options.\
 This is a usage that provides comfort to the user when too many arguments are used.
@@ -169,7 +169,7 @@ numbers=(10 20 30 40 50)
 echo "First Number: ${numbers[0]}"
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash25.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash25.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash25.png" alt=""><figcaption></figcaption></figure>
 
 When bash receives a command that a user types on the keyboard or comes from a bash script, it splits it into words. In doing so, Bash can perform seven different operations on words, which can change how they are interpreted and thus the output. There are 7 different expansions that we can use in Bash. Now let's examine them one by one:
 
@@ -199,7 +199,7 @@ for i in {1..3}; do
 done
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash35.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash35.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash35.png" alt=""><figcaption></figcaption></figure>
 
 *   #### Tilde Expansion
 
@@ -208,7 +208,7 @@ done
 -a tilde expansion is actually replacing a path that points to a user's home directory.\
 \- instead of taking risks by expressing the directory of a user whose name we know as /home/\<username>/ we can express it as **\~\<username>** .
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/shell-table.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/shell-table.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/shell-table.png" alt=""><figcaption></figcaption></figure>
 
 ```
 #!/bin/bash
@@ -220,7 +220,7 @@ echo ~+
 echo ~-               
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash37.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash37.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash37.png" alt=""><figcaption></figcaption></figure>
 
 *   #### Parameter and Variable Expansion
 
@@ -262,7 +262,7 @@ do
 done
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash38.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash38.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash38.png" alt=""><figcaption></figcaption></figure>
 
 Using the IFS variable, you can split a string in bash by a specific character or string of characters. For example, you can set the IFS variable to a comma to split a comma-separated array:
 
@@ -279,7 +279,7 @@ done
              
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash40.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash40.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash40.png" alt=""><figcaption></figcaption></figure>
 
 #### Command Substitution
 
@@ -345,7 +345,7 @@ do
 done
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash39.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash39.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash39.png" alt=""><figcaption></figcaption></figure>
 
 how bash handles quotes. Word splitting does not occur when a string is in double quotes.\
 example
@@ -361,7 +361,7 @@ do
 done
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash-split.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash-split.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash-split.png" alt=""><figcaption></figcaption></figure>
 
 **Pathname Expansion**
 
@@ -369,7 +369,7 @@ done
 
 Bash uses various special characters and structures for pathname expansion:
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/shell-exp-t.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/shell-exp-t.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/shell-exp-t.png" alt=""><figcaption></figcaption></figure>
 
 ```
 #!/bin/bash
@@ -440,7 +440,7 @@ new_string="${string//$pattern/$replacement}"
 echo "New string: $new_string"      
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash30.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash30.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash30.png" alt=""><figcaption></figcaption></figure>
 
 For example, checking the validity of an email address or verifying the accuracy of a phone number
 
@@ -468,7 +468,7 @@ validateEmail "$user_email"
              
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash31.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash31.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash31.png" alt=""><figcaption></figcaption></figure>
 
 For example, let's have an "access.log" file of a web server like the one below:
 
@@ -551,4 +551,4 @@ processFile() {
 processFile
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash33.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/bash33.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/bash33.png" alt=""><figcaption></figcaption></figure>
