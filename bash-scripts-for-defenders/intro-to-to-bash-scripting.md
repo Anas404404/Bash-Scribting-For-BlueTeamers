@@ -163,9 +163,9 @@ else
 fi
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash4.png)](../.gitbook/assets/bash4.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash4.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash-table-1.png)](../.gitbook/assets/bash-table-1.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash-table-1.png" alt=""><figcaption></figcaption></figure>
 
 #### “For” Loop
 
@@ -206,7 +206,7 @@ do
 done
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash8.png)](../.gitbook/assets/bash8.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash8.png" alt=""><figcaption></figcaption></figure>
 
 #### “While” Loop
 
@@ -225,7 +225,7 @@ do
 done         
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash10.png)](../.gitbook/assets/bash10.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash10.png" alt=""><figcaption></figcaption></figure>
 
 In the example below:
 
@@ -245,7 +245,7 @@ do
 done
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash12.png)](../.gitbook/assets/bash12.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash12.png" alt=""><figcaption></figcaption></figure>
 
 For this example, let's create a loop that continues unless there is a file named "test.txt" under the "/tmp" directory\
 When we run the script, the loop continues until we create the "test.txt" file in the "/tmp" directory and ends when we create the file
@@ -260,7 +260,7 @@ done
 echo "File Found, Done."
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash14.png)](../.gitbook/assets/bash14.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash14.png" alt=""><figcaption></figcaption></figure>
 
 #### “Case” Structure
 
@@ -288,7 +288,7 @@ case $our_variable in
 esac
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash100.png)](../.gitbook/assets/bash100.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash100.png" alt=""><figcaption></figcaption></figure>
 
 ### Function
 
@@ -311,9 +311,9 @@ To call this function, we can do as follows:
 Hello "Bash"
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash101.png)](../.gitbook/assets/bash101.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash101.png" alt=""><figcaption></figcaption></figure>
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash102.png)](../.gitbook/assets/bash102.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash102.png" alt=""><figcaption></figcaption></figure>
 
 Below is an example of :
 
@@ -374,7 +374,7 @@ echo $greeting # This will print "Hello, World!" because the scope here has only
 
 So what happens when we call the 'displayGreeting' function? The 'echo $greeting' code inside the function runs and says "Hello, User!" he greets us. Because the local variable inside the function rises above the global variable with the same name.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash18.png)](../.gitbook/assets/bash18.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash18.png" alt=""><figcaption></figcaption></figure>
 
 #### Error Catching
 
@@ -396,7 +396,7 @@ if [ $? -ne 0 ]; then
 fi
 ```
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash19.png)](../.gitbook/assets/bash19.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash19.png" alt=""><figcaption></figcaption></figure>
 
 #### Debugging
 
@@ -419,7 +419,7 @@ set +x # turn off trace mode
 
 This allows you to follow what the script is doing and identify where the errors occur step-by-step.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash20.png)](../.gitbook/assets/bash20.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main/.gitbook/assets/bash20.png" alt=""><figcaption></figcaption></figure>
 
 Another debugging method is to use set -e (or bash -e). set -e (or bash -e) causes the script to stop when the return value of any command in the Bash script is non-zero (it means if the script fails)
 
