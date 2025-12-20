@@ -4,7 +4,7 @@
 
 ***
 
-### Security Principle: Access Control
+### <mark style="color:purple;">Security Principle: Access Control</mark>
 
 Not everyone should have access to every document and information, right? Employees in the accounting department should not have access to human resources documents, and vice versa; individuals in human resources should not have access to accounting documents.The same principle applies to a computer network
 
@@ -26,9 +26,9 @@ common approaches to access control are :
 * used to determine users' authorization levels and the resources they can access. This ensures that the principle of least privilege is followed and that data privacy is protected.
 * manages user or group access permissions to a system by assigning roles and associating them with specific permissions
 
+<figure><img src="../.gitbook/assets/a.jpg" alt=""><figcaption></figcaption></figure>
+
 #### Implementation of RBAC
-
-
 
 1- **Defining the Role**\
 **2- Assigning Users to Roles**\
@@ -51,7 +51,7 @@ ABAC :
 
 ***
 
-### **Separation and the Principles of the Least Privilege**
+### <mark style="color:purple;">**Separation and the Principles of the Least Privilege**</mark>
 
 \
 &#xNAN;**(Separation of Duties)**
@@ -71,9 +71,7 @@ ABAC :
 
 ***
 
-### Authentication
-
-
+### <mark style="color:purple;">Authentication</mark>
 
 Strong Authentication Methods :
 
@@ -82,13 +80,11 @@ Strong Authentication Methods :
 * Passwords should be changed periodically, stored securely, and should not be reused.
 * Application of technological authentication methods such as biometric verification or physical devices.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image6.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/image6.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image6.png" alt=""><figcaption></figcaption></figure>
 
 ***
 
-### Session Management
-
-
+### <mark style="color:purple;">Session Management</mark>
 
 Users' access should be granted for the required time period and the session should be terminated automatically. This measure safeguards against unauthorized access and mitigates the risk of session hijacking
 
@@ -106,9 +102,7 @@ Authorization and session managements are key elements of access control and are
 
 ***
 
-### Static and Dynamic Data
-
-
+### <mark style="color:purple;">Static and Dynamic Data</mark>
 
 * **Static (stationary) data:** Static data, as its name suggests, remains stationary; it is stored somewhere, awaiting utilization. Examples include data on disks, etc. All forms of data residing in these kinds of environments fall within this category.
 * **Dynamic data:** Dynamic data, as the name implies, is data that moves from one place to another. \[ This can also be a file downloaded to your system from an internet source ] \\
@@ -118,16 +112,14 @@ When the data is stored on the server (**static data**), it is protected using m
 * **Static Data** → protected with access controls and permissions.
 * **Dynamic Data** → protected with encryption during transmission.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/sni2.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/sni2.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/sni2.png" alt=""><figcaption></figcaption></figure>
 
 #### Protection of Dynamic Data
-
-
 
 * **Data Encryption**
 * **Secure Data Communication \[** SSL/TLS protocols can be used , verification ]
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image8.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/image8.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image8.png" alt=""><figcaption></figcaption></figure>
 
 * make sure that the data is transferred and verified securely.
 * not storing data unnecessarily.
@@ -148,9 +140,7 @@ Protection of Static Data
 
 ***
 
-### Authorization Methods
-
-
+### <mark style="color:purple;">Authorization Methods</mark>
 
 Authorization, which is performed after the authentication process, allows the users to determine the level of access to certain resources
 
@@ -165,7 +155,7 @@ Commonly used authorization approaches :\
 * Users gain access to certain resources in the system depending on their role.
 * For example, users with an "Administrator" role can access all functions of the system, while users with a "User" role may be subject to certain restrictions
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/ab0d45a55f0c41a243093fb57d460fc366fed9ab-6336x3952.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/ab0d45a55f0c41a243093fb57d460fc366fed9ab-6336x3952.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/ab0d45a55f0c41a243093fb57d460fc366fed9ab-6336x3952.png" alt=""><figcaption></figcaption></figure>
 
 \
 **Policy-Based Authorization :**
@@ -173,7 +163,7 @@ Commonly used authorization approaches :\
 * includes policy rules that determine users' access rights.
 * For example, a policy rule may specify whether a particular user can access or not access a particular resource in a particular time zone.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/1751553018993.jpg)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/1751553018993.jpg)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/1751553018993.jpg" alt=""><figcaption></figcaption></figure>
 
 **Permission-Based Authorization :**
 
@@ -186,33 +176,31 @@ technologies and standards exist to support and implement the Authentication and
 * **LDAP (Lightweight Directory Access Protocol):** is a communication protocol used to retrieve user credentials from databases. It supports directory-based services used in the authentication and authorization processes of users.
 * **Single Sign-On (SSO):** allows users to access multiple applications with a single authentication. Users authenticate once and then automatically gain access to other applications.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/auth3.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/auth3.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/auth3.png" alt=""><figcaption></figcaption></figure>
 
 * Kerberos is a protocol used to provide secure authentication on a network. It is especially used in Windows-based systems and Active Directory environments
 * **SAML (Security Assertion Markup Language):** is an XML-based standard used for authentication and authorization. Provides federation-based authentication where users are authenticated with a security statement provided by the identity provider to access a service
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/676ffeb1fa353f97be8f0246_61cc7d5ff16cb02316b7d847_SAML_20work.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/676ffeb1fa353f97be8f0246_61cc7d5ff16cb02316b7d847_SAML_20work.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/676ffeb1fa353f97be8f0246_61cc7d5ff16cb02316b7d847_SAML_20work.png" alt=""><figcaption></figcaption></figure>
 
 * **RADIUS (Remote Authentication Dial-In User Service):** is a network protocol used for user authentication and authorization in remote access services. It is mainly used in network access points.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/RADIUS-Authentication-Process.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/RADIUS-Authentication-Process.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/RADIUS-Authentication-Process.png" alt=""><figcaption></figcaption></figure>
 
 * OAuth : is an authorization protocol that allows users to be authorized to access a service. Used to control access to credentials of third-party applications.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/everything-you-need-to-know-about-oauth-4.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/everything-you-need-to-know-about-oauth-4.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/everything-you-need-to-know-about-oauth-4.png" alt=""><figcaption></figcaption></figure>
 
 * OpenID Connect is a standard that combines authentication and authorization processes based on the OAuth 2.0 protocol. It provides secure authentication of users through identity providers.
 * **JWT (JSON Web Token):** JWT is an authentication mechanism used in web applications. It encrypts and securely transports user information in JSON format. These tokens enable secure sharing of authentication information
 
-\{% embed url="[https://medium.com/@anas.abdo990088/jwt-from-a-blue-team-perspective-5f9f3d05c9b3](https://medium.com/@anas.abdo990088/jwt-from-a-blue-team-perspective-5f9f3d05c9b3)" %\}
+{% embed url="https://medium.com/@anas.abdo990088/jwt-from-a-blue-team-perspective-5f9f3d05c9b3" %}
 
-\{% embed url="[https://medium.com/@anas.abdo990088/secrets-lab-blue-team-labs-online-7e7af65ea593](https://medium.com/@anas.abdo990088/secrets-lab-blue-team-labs-online-7e7af65ea593)" %\}
+{% embed url="https://medium.com/@anas.abdo990088/secrets-lab-blue-team-labs-online-7e7af65ea593" %}
 
 ***
 
-### Password Management
-
-
+### <mark style="color:purple;">Password Management</mark>
 
 A strong and effective password management strategy is an essential step in ensuring the security of information, accounts, and systems.
 
@@ -231,15 +219,15 @@ should include the basic principles of creating strong and secure passwords. Pas
 
 **Frequency of Updates :** How often passwords should be updated often depends on policies set by the organization. The recommended period is usually 90 days. However, in some cases, this period may be shorter or longer.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/pass1.jpeg)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/pass1.jpeg)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/pass1.jpeg" alt=""><figcaption></figcaption></figure>
 
 The following section is used to set a password policy on Windows.
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image4-1.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/image4-1.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image4-1.png" alt=""><figcaption></figcaption></figure>
 
 The following file is used to set a password policy on Linux:
 
-[![](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image4-2.png)](https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/blob/main2/.gitbook/assets/image4-2.png)
+<figure><img src="https://github.com/Anas404404/Bash-Scribting-For-BlueTeamers/raw/main2/.gitbook/assets/image4-2.png" alt=""><figcaption></figcaption></figure>
 
 login.defs : the name of the file used to set the password policy on Linux
 

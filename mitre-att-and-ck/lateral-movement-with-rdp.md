@@ -46,8 +46,7 @@ netsh advfirewall firewall set rule group="remote desktop" new enable=No
 * **Credential Theft and Reuse :Attackers employ multiple methods to harvest credentials:**\
   **1- LSASS Memory Extraction: Mimikatz recover plaintext passwords from system memory**\
   &#x20;**2- Keystroke Logging: Capturing credentials during legitimate authentication.** \
-  **3- Credential Cache Attacks: Exploiting Windows' credential storage mechanisms.**\
-
+  **3- Credential Cache Attacks: Exploiting Windows' credential storage mechanisms.**<br>
 * **RDP Session Hijacking :**\
   **attackers may hijack existing RDP sessions. This technique involves the following steps :**\
   **1- Identifying active RDP sessions on a compromised system**\
