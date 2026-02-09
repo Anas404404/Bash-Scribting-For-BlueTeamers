@@ -29,3 +29,7 @@
 ## Web Attacks
 
 * [IDOR](web-attacks/idor.md)
+
+## Malware Analysis and Reverse engineering
+
+* [Advanced Malware Analysis](malware-analysis-and-reverse-engineering/advanced-malware-analysis.md)
