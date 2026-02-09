@@ -30,6 +30,10 @@
 
 * [IDOR](web-attacks/idor.md)
 
-## Malware Analysis and Reverse engineering
+## Advanced Malware Analysis&#x20;
 
-* [Advanced Malware Analysis](malware-analysis-and-reverse-engineering/advanced-malware-analysis.md)
+* [Download and Setup x64\_x32 debugger for windows](advanced-malware-analysis/download-and-setup-x64_x32-debugger-for-windows.md)
+
+## Reverse Code Engineering
+
+* [Page 1](reverse-code-engineering/page-1.md)
