@@ -12,9 +12,9 @@
 
 * [GRC](grc404/grc.md)
 
-## MITRE ATT\&CK
+## DFIR
 
-* [Lateral Movement With RDP](mitre-att-and-ck/lateral-movement-with-rdp.md)
+* [Lateral Movement With RDP](dfir/lateral-movement-with-rdp.md)
 
 ## Threat Emulation
 
@@ -23,17 +23,20 @@
 ## Active Directory
 
 * [NTDS dumping attack](active-directory/ntds-dumping-attack.md)
-* [LAB 1 : NTDS dumping attack](active-directory/lab-ntds-dumping-attack.md)
-* [LAB 2 : NTDS dumping attack](active-directory/lab-2-ntds-dumping-attack.md)
 
 ## Web Attacks
 
 * [IDOR](web-attacks/idor.md)
 
-## Advanced Malware Analysis&#x20;
-
-* [Download and Setup x64\_x32 debugger for windows](advanced-malware-analysis/download-and-setup-x64_x32-debugger-for-windows.md)
-
 ## Reverse Code Engineering
 
 * [Page 1](reverse-code-engineering/page-1.md)
+
+## Advanced Malware Analysis&#x20;
+
+* [Download and Setup x64\_x32 debugger for windows](malware-analysis-and-reverse-engineering/advanced-malware-analysis.md)
+
+## HTB Labs&#x20;
+
+* [LAB 1 : NTDS dumping attack](htb-labs/lab-1-ntds-dumping-attack.md)
+* [LAB 2 : NTDS dumping attack](htb-labs/lab-2-ntds-dumping-attack.md)
